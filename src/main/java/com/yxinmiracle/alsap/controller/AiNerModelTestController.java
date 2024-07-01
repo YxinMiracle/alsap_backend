@@ -63,6 +63,7 @@ public class AiNerModelTestController {
         }
 
         NerModelDto nerModelDto;
+        // 添加AI服务异常捕获信息
         try {
             nerModelDto = AiServer.nerModelTest(modelAddTestRequest);
         } catch (Exception e) {

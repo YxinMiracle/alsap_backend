@@ -381,6 +381,7 @@ public class CtiController {
         BeanUtils.copyProperties(ctiAddRequest, cti);
         ModelCtiVo modelCtiVo;
 
+        // 添加AI服务异常捕获信息
         try {
             // 获取到的对应的ctiId
             modelCtiVo = AiServer.getEntityAns(ctiAddRequest.getContent());
@@ -436,6 +437,7 @@ public class CtiController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Cti cti = ctiService.getById(ctiId);
+        // 添加AI服务异常捕获信息
         try {
             String s = new AiServer().pythonCreateGraph(cti);
         }catch (Exception e){
@@ -488,6 +490,7 @@ public class CtiController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Cti cti = ctiService.getById(ctiId);
+        // 添加AI服务异常捕获信息
         try {
             String s = new AiServer().copyModelData(cti);
         }catch (Exception e){
