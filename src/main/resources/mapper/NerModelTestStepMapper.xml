@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxinmiracle.alsap.mapper.NerModelTestStepMapper">
+
+    <resultMap id="BaseResultMap" type="com.yxinmiracle.alsap.model.entity.NerModelTestStep">
+            <id property="nerModelTestStepId" column="nerModelTestStepId" jdbcType="INTEGER"/>
+            <result property="stepNum" column="stepNum" jdbcType="INTEGER"/>
+            <result property="nerModelTestContent" column="nerModelTestContent" jdbcType="VARCHAR"/>
+            <result property="nerModelTestTotalWordNum" column="nerModelTestTotalWordNum" jdbcType="INTEGER"/>
+            <result property="nerModelTestSentNum" column="nerModelTestSentNum" jdbcType="INTEGER"/>
+            <result property="nerModelTestCreateTime" column="nerModelTestCreateTime" jdbcType="TIMESTAMP"/>
+            <result property="nerModelTestIsTest" column="nerModelTestIsTest" jdbcType="TINYINT"/>
+            <result property="nerModelTestIsRetrain" column="nerModelTestIsRetrain" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        nerModelTestStepId,stepNum,nerModelTestContent,
+        nerModelTestTotalWordNum,nerModelTestSentNum,nerModelTestCreateTime,
+        nerModelTestIsTest,nerModelTestIsRetrain
+    </sql>
+</mapper>

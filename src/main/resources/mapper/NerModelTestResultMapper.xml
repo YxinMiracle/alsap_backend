@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxinmiracle.alsap.mapper.NerModelTestResultMapper">
+
+    <resultMap id="BaseResultMap" type="com.yxinmiracle.alsap.model.entity.NerModelTestResult">
+            <id property="nerModelTestResultId" column="nerModelTestResultId" jdbcType="BIGINT"/>
+            <result property="nerModelTestStepId" column="nerModelTestStepId" jdbcType="INTEGER"/>
+            <result property="nerModelTestResultWord" column="nerModelTestResultWord" jdbcType="VARCHAR"/>
+            <result property="nerModelTestResultTrueLabel" column="nerModelTestResultTrueLabel" jdbcType="VARCHAR"/>
+            <result property="nerModelTestResultPredLabel" column="nerModelTestResultPredLabel" jdbcType="VARCHAR"/>
+            <result property="nerModelTestResultIsTrue" column="nerModelTestResultIsTrue" jdbcType="TINYINT"/>
+            <result property="nerModelTestResultWordIndex" column="nerModelTestResultWordIndex" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        nerModelTestResultId,nerModelTestStepId,nerModelTestResultWord,
+        nerModelTestResultTrueLabel,nerModelTestResultPredLabel,nerModelTestResultIsTrue,
+        nerModelTestResultWordIndex
+    </sql>
+</mapper>

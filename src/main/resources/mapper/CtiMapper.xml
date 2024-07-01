@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxinmiracle.alsap.mapper.CtiMapper">
+
+    <resultMap id="BaseResultMap" type="com.yxinmiracle.alsap.model.entity.Cti">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="userId" column="userId" jdbcType="BIGINT"/>
+        <result property="wordList" column="wordList" jdbcType="VARCHAR"/>
+        <result property="labelList" column="labelList" jdbcType="VARCHAR"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,content,
+        userId,createTime,updateTime,
+        isDelete
+    </sql>
+
+    <select id="preventEntitySearch"
+            parameterType="com.yxinmiracle.alsap.model.dto.cti.PreventEntityQuery"
+            resultType="com.yxinmiracle.alsap.model.entity.Relation">
+
+        SELECT DISTINCT id, ctiId, startCtiEntityId, endCtiEntityId, relationTypeId
+        FROM (
+        SELECT t1.id, t1.ctiId, t1.startCtiEntityId, t1.endCtiEntityId, t1.relationTypeId
+        FROM relation AS t1
+        LEFT JOIN entity AS t2 ON t1.endCtiEntityId = t2.id
+        WHERE t1.startCtiEntityId
+        IN
+        <foreach item="item" index="index" collection="startNodeIdList"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t1.isDelete = 0
+        <if test="itemTypeIds != null">
+            AND
+            t2.itemId in
+            <foreach item="item" index="index" collection="itemTypeIds"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        UNION
+
+        SELECT t1.id, t1.ctiId, t1.startCtiEntityId, t1.endCtiEntityId, t1.relationTypeId
+        FROM relation AS t1
+        LEFT JOIN entity AS t2 ON t1.startCtiEntityId = t2.id
+        WHERE t1.endCtiEntityId
+        IN
+        <foreach item="item" index="index" collection="startNodeIdList"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND t1.isDelete = 0
+        <if test="itemTypeIds != null">
+            AND
+            t2.itemId in
+            <foreach item="item" index="index" collection="itemTypeIds"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        ) AS combined_results;
+
+    </select>
+
+
+</mapper>
