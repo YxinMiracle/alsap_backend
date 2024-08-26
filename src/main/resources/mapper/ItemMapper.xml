@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxinmiracle.alsap.mapper.ItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.yxinmiracle.alsap.model.entity.Item">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="itemName" column="itemName" jdbcType="VARCHAR"/>
+            <result property="itemContent" column="itemContent" jdbcType="VARCHAR"/>
+            <result property="backgroundColor" column="backgroundColor" jdbcType="VARCHAR"/>
+            <result property="textColor" column="textColor" jdbcType="VARCHAR"/>
+            <result property="itemType" column="itemType" jdbcType="TINYINT"/>
+            <result property="itemTypeContent" column="itemTypeContent" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,itemName,itemContent,
+        backgroundColor,textColor,itemType,
+        itemTypeContent,createTime,updateTime,
+        isDelete
+    </sql>
+    
+    <select id="getHomeViewDiffListByItemType" parameterType="integer" resultType="com.yxinmiracle.alsap.model.vo.home.ItemHomeVo">
+        SELECT
+            i.id,
+            i.itemName,
+            i.backgroundColor,
+            COUNT(c.itemId) AS itemDbCount
+        FROM item i
+        LEFT JOIN cti_chunk c ON i.id = c.itemId AND c.isDelete = 0
+        WHERE i.itemType = #{itemType} AND i.isDelete = 0
+        GROUP BY i.id, i.itemName, i.backgroundColor;
+    </select>
+
+    <select id="getTotalItemTypeCountInDbByItemType" parameterType="integer" resultType="integer">
+        SELECT count(*)
+        FROM cti_chunk as t1
+        left join
+        item as t2
+        on
+        t1.itemId= t2.id
+        WHERE t1.isDelete = 0
+          and t2.isDelete = 0
+          and t2.itemType= #{itemType}
+    </select>
+</mapper>
