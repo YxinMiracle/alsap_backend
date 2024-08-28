@@ -29,7 +29,7 @@ public class ItemHomeVo implements Serializable {
     /**
      * 实体类型，2是sdo,1是sco
      */
-    private short itemType;
+    private Integer itemType;
 
     /**
      * 整个实体的类型名称itemName在整个item表中占多少个

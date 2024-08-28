@@ -45,7 +45,7 @@ public class Item implements Serializable {
     /**
      * 实体类型，2是sdo,1是sco
      */
-    private short itemType;
+    private Integer itemType;
 
     /**
      * 对itemType的一个解释
@@ -90,4 +90,6 @@ public class Item implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
+
 }

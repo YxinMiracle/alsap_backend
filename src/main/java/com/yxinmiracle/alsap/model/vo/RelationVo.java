@@ -6,6 +6,7 @@ package com.yxinmiracle.alsap.model.vo;
  * @Gitee: https://gitee.com/yxinmiracle
  */
 
+import com.yxinmiracle.alsap.model.vo.item.ItemVo;
 import lombok.Data;
 
 import java.io.Serializable;

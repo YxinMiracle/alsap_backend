@@ -67,6 +67,7 @@ public class CtiServiceImpl extends ServiceImpl<CtiMapper, Cti>
         ctiQueryWrapper.eq(ObjectUtils.isNotEmpty(userId), Cti::getUserId, userId);
         ctiQueryWrapper.ge(ObjectUtils.isNotEmpty(createTime), Cti::getCreateTime, createTime);
         ctiQueryWrapper.ge(ObjectUtils.isNotEmpty(updateTime), Cti::getUpdateTime, updateTime);
+
         return ctiQueryWrapper;
     }
 

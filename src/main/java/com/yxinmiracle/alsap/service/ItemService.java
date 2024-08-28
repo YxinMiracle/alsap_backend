@@ -1,10 +1,17 @@
 package com.yxinmiracle.alsap.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yxinmiracle.alsap.model.dto.item.ItemQueryRequest;
 import com.yxinmiracle.alsap.model.entity.Item;
 import com.yxinmiracle.alsap.model.vo.home.ItemHomeVo;
+import com.yxinmiracle.alsap.model.vo.item.ItemVo;
 import io.swagger.annotations.ApiOperation;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -28,4 +35,10 @@ public interface ItemService extends IService<Item> {
 
     @ApiOperation(value = "返回一个Map，key为item的id，value为item")
     Map<Long, Item> getItemId2ItemMap();
+
+    LambdaQueryWrapper<Item> getQueryWrapper(ItemQueryRequest itemQueryRequest);
+
+    Page<ItemVo> getItemVOPage(Page<Item> itemPage, HttpServletRequest request);
+
+    void validItem(Item item, boolean add);
 }

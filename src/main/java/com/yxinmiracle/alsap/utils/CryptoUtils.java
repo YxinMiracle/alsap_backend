@@ -45,9 +45,9 @@ public class CryptoUtils {
     }
 
     // 判断header加密信息是否合法
-    public static boolean validateRequest(String receivedEncryptedHeader, String jsonData, String timestamp, String randomValue, String key) {
+    public static boolean validateRequest(String receivedEncryptedHeader, String timestamp, String randomValue, String key) {
         try {
-            String reconstructedString = randomValue + key + java.net.URLDecoder.decode(jsonData, "UTF-8") + timestamp;
+            String reconstructedString = randomValue + key + timestamp;
             String computedHash = computeSHA256(reconstructedString);
             return receivedEncryptedHeader.equals(computedHash);
         } catch (Exception e) {
