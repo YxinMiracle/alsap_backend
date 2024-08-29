@@ -5,8 +5,6 @@ import lombok.Data;
 
 /**
  * 分页请求
- *
-
  */
 @Data
 public class PageRequest {
@@ -20,6 +18,11 @@ public class PageRequest {
      * 页面大小
      */
     private int pageSize = 10;
+
+    /**
+     * 偏移量
+     */
+    private int offset;
 
     /**
      * 排序字段

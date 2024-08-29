@@ -19,4 +19,79 @@
         relationName,createTime,updateTime,
         isDelete
     </sql>
+
+
+    <select id="getRelationTypeVoListPage" parameterType="com.yxinmiracle.alsap.model.dto.relationType.RelationTypeQueryRequest" resultType="com.yxinmiracle.alsap.model.vo.relationType.RelationTypeVo">
+        SELECT
+        rt.id AS id,
+        rt.relationName AS relationName,
+        item1.id AS startItemId,
+        item1.itemName AS startItemName,
+        item1.itemType AS startItemType,
+        item2.id AS endItemId,
+        item2.itemName AS endItemName,
+        item2.itemType AS endItemType
+        FROM
+        relation_type rt
+        JOIN item item1 ON rt.startEntityItemId = item1.id
+        JOIN item item2 ON rt.endEntityItemId = item2.id
+        <where>
+            <if test="relationName != null and relationName != ''">
+                AND rt.relationName LIKE CONCAT('%', #{relationName}, '%')
+            </if>
+            <if test="startItemId != null">
+                AND item1.id = #{startItemId}
+            </if>
+            <if test="startItemName != null and startItemName != ''">
+                AND item1.itemName LIKE CONCAT('%', #{startItemName}, '%')
+            </if>
+            <if test="startItemType != null">
+                AND item1.itemType = #{startItemType}
+            </if>
+            <if test="endItemId != null">
+                AND item2.id = #{endItemId}
+            </if>
+            <if test="endItemName != null and endItemName != ''">
+                AND item2.itemName LIKE CONCAT('%', #{endItemName}, '%')
+            </if>
+            <if test="endItemType != null">
+                AND item2.itemType = #{endItemType}
+            </if>
+        </where>
+        LIMIT #{offset}, #{pageSize}
+
+    </select>
+
+    <select id="getTotalCount" parameterType="com.yxinmiracle.alsap.model.dto.relationType.RelationTypeQueryRequest" resultType="long">
+        SELECT
+        COUNT(*)
+        FROM
+        relation_type rt
+        JOIN item item1 ON rt.startEntityItemId = item1.id
+        JOIN item item2 ON rt.endEntityItemId = item2.id
+        <where>
+            <if test="relationName != null and relationName != ''">
+                AND rt.relationName LIKE CONCAT('%', #{relationName}, '%')
+            </if>
+            <if test="startItemId != null">
+                AND item1.id = #{startItemId}
+            </if>
+            <if test="startItemName != null and startItemName != ''">
+                AND item1.itemName LIKE CONCAT('%', #{startItemName}, '%')
+            </if>
+            <if test="startItemType != null">
+                AND item1.itemType = #{startItemType}
+            </if>
+            <if test="endItemId != null">
+                AND item2.id = #{endItemId}
+            </if>
+            <if test="endItemName != null and endItemName != ''">
+                AND item2.itemName LIKE CONCAT('%', #{endItemName}, '%')
+            </if>
+            <if test="endItemType != null">
+                AND item2.itemType = #{endItemType}
+            </if>
+        </where>
+    </select>
+
 </mapper>

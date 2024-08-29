@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@ApiModel(value = "Item更新请求类")
+@ApiModel(description = "Item更新请求类")
 public class ItemUpdateRequest implements Serializable {
 
 

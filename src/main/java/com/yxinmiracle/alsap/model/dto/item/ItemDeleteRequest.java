@@ -13,7 +13,6 @@ import java.io.Serializable;
  */
 
 @Data
-@ApiModel(value = "item删除请求类")
 public class ItemDeleteRequest implements Serializable {
 
     @ApiModelProperty(value = "item删除的id")

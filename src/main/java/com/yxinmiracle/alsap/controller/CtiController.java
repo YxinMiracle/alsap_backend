@@ -1,15 +1,12 @@
 package com.yxinmiracle.alsap.controller;
 
-import cn.hutool.Hutool;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.Gson;
 import com.yxinmiracle.alsap.aiService.AiServer;
 import com.yxinmiracle.alsap.annotation.AuthCheck;
 import com.yxinmiracle.alsap.annotation.DecryptRequestBody;
 import com.yxinmiracle.alsap.common.BaseResponse;
-import com.yxinmiracle.alsap.common.DeleteRequest;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.common.ResultUtils;
 import com.yxinmiracle.alsap.constant.UserConstant;
@@ -18,14 +15,8 @@ import com.yxinmiracle.alsap.exception.ThrowUtils;
 import com.yxinmiracle.alsap.model.dto.cti.CtiAddRequest;
 import com.yxinmiracle.alsap.model.dto.cti.CtiDeleteRequest;
 import com.yxinmiracle.alsap.model.dto.cti.CtiQueryRequest;
-import com.yxinmiracle.alsap.model.dto.post.PostEditRequest;
-import com.yxinmiracle.alsap.model.dto.post.PostQueryRequest;
-import com.yxinmiracle.alsap.model.dto.post.PostUpdateRequest;
 import com.yxinmiracle.alsap.model.entity.*;
-import com.yxinmiracle.alsap.model.entity.Relation;
-import com.yxinmiracle.alsap.model.enums.ItemTypeEnum;
 import com.yxinmiracle.alsap.model.model.ModelResult;
-import com.yxinmiracle.alsap.model.vo.PostVO;
 import com.yxinmiracle.alsap.model.vo.cti.CtiVo;
 import com.yxinmiracle.alsap.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -33,15 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 帖子接口
