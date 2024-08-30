@@ -94,4 +94,11 @@
         </where>
     </select>
 
+    <select id="getRelationTypeNameList" resultType="string">
+        SELECT DISTINCT
+            relationName
+        from
+            relation_type
+    </select>
+
 </mapper>

@@ -14,4 +14,8 @@ import java.util.List;
 public interface RelationTypeService extends IService<RelationType> {
 
     Page<RelationTypeVo> getRelationTypeVoListPage(RelationTypeQueryRequest relationTypeQueryRequest);
+
+    List<String> getRelationTypeNameList();
+
+    void validRelationType(RelationType relationType);
 }

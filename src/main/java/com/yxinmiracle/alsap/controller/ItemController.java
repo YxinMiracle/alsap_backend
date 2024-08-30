@@ -26,10 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +70,19 @@ public class ItemController {
 
 
         return ResultUtils.success(itemService.getItemVOPage(itemPage, request));
+    }
+
+    /**
+     * 获取Item Map
+     */
+    @GetMapping("/all")
+    @ApiOperation(value = "返回item的Map形数据, 这可以用来规定下拉框的选择")
+    public BaseResponse<Map<Long, Item>> getAllItemMapData(HttpServletRequest request) {
+        Map<Long, Item> itemId2ItemMap = itemService.getItemId2ItemMap();
+        if (ObjectUtils.isEmpty(itemId2ItemMap)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        }
+        return ResultUtils.success(itemId2ItemMap);
     }
 
     /**
