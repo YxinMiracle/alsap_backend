@@ -12,13 +12,11 @@ import com.yxinmiracle.alsap.model.dto.post.PostQueryRequest;
 import com.yxinmiracle.alsap.model.entity.Post;
 import com.yxinmiracle.alsap.model.entity.User;
 import com.yxinmiracle.alsap.model.vo.PostVO;
-import com.yxinmiracle.alsap.model.vo.UserVO;
+import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import com.yxinmiracle.alsap.service.PostService;
 import com.yxinmiracle.alsap.service.UserService;
 import com.yxinmiracle.alsap.utils.SqlUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,17 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,4 +1,4 @@
-package com.yxinmiracle.alsap.model.vo;
+package com.yxinmiracle.alsap.model.vo.graph;
 
 /*
  * @author  YxinMiracle
@@ -7,8 +7,12 @@ package com.yxinmiracle.alsap.model.vo;
  */
 
 
+import com.yxinmiracle.alsap.model.vo.cti.CtiVo;
 import com.yxinmiracle.alsap.model.vo.item.ItemVo;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class GraphNodeVo {
@@ -18,6 +22,12 @@ public class GraphNodeVo {
      * 实体内容，内容相同的我就不需要去插入了
      */
     private String entityName;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private List<CtiVo> relatedCti;
 
     /**
      * 这个实体对应的CTI文章是什么

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxinmiracle.alsap.model.dto.user.UserQueryRequest;
 import com.yxinmiracle.alsap.model.entity.User;
 import com.yxinmiracle.alsap.model.vo.LoginUserVO;
-import com.yxinmiracle.alsap.model.vo.UserVO;
+import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 

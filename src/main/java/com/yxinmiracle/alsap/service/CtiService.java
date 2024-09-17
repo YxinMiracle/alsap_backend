@@ -25,6 +25,12 @@ public interface CtiService extends IService<Cti> {
 
     List<Relation> getPreventGraphRelationDataList(PreventEntityQuery preventEntityQuery);
 
+    @ApiOperation(value = "根据cti的id,获取这个cti中的sco有多少个,sdo有多少个")
+    CtiVo getScoAndSdoCountByCtiId(Long ctiId, Map<Long, Item> itemId2ItemMap);
+
     @ApiOperation(value = "将Cti对象转为CtiVo对象，主要是多了关于这个cti的实体信息，比如sco多少，sdo是多少")
     Page<CtiVo> getCtiVOPage(Page<Cti> ctiPage, Map<Long, Item> itemId2ItemMap, HttpServletRequest request);
+
+    @ApiOperation(value = "将ctiList转为，ctiVoList")
+    List<CtiVo> getCtiVOList(List<Cti> ctiList, Map<Long, Item> itemId2ItemMap);
 }

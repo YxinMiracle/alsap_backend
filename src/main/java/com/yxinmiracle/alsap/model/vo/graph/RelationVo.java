@@ -1,4 +1,4 @@
-package com.yxinmiracle.alsap.model.vo;
+package com.yxinmiracle.alsap.model.vo.graph;
 
 /*
  * @author  YxinMiracle

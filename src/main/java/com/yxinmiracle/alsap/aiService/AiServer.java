@@ -17,6 +17,7 @@ import com.yxinmiracle.alsap.service.CtiService;
 import com.yxinmiracle.alsap.service.ItemService;
 import com.yxinmiracle.alsap.service.RelationTypeService;
 import com.yxinmiracle.alsap.utils.RequestUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -48,7 +49,8 @@ public class AiServer {
 
     private static final String AUTH_REQUEST_SECRET = "secretKey";
 
-    public static String AI_SERVER_URL = "http://model.yxinmiracle.com:8365";
+    @Value("${aiServer.host}")
+    public static String AI_SERVER_URL;
 
     public static String ttpServerPath = "/annotation/cti";
     public static String getGraphServePath = "/graph/cti";

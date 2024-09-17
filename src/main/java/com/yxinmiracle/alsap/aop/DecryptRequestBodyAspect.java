@@ -78,6 +78,7 @@ public class DecryptRequestBodyAspect {
 
         try {
             String decryptedData = CryptoUtils.decryptAndDecodeBase64(encryptedData);
+            System.out.println(decryptedData);
             if (!CryptoUtils.validateRequest(signature, requestTimestamp, nonce, fixedValue))
                 throw new BusinessException(ErrorCode.ILLEGALITY_REQUEST_ERROR);
             Object[] args = buildArguments(joinPoint, decryptedData, request);

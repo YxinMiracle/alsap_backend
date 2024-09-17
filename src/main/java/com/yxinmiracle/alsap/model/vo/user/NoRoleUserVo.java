@@ -1,17 +1,19 @@
-package com.yxinmiracle.alsap.model.vo;
+package com.yxinmiracle.alsap.model.vo.user;
 
-import java.io.Serializable;
-import java.util.Date;
+/*
+ * @author  YxinMiracle
+ * @date  2024-09-11 15:12
+ * @Gitee: https://gitee.com/yxinmiracle
+ */
+
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
-/**
- * 用户视图（脱敏）
- *
+import java.util.Date;
 
- */
 @Data
-public class UserVO implements Serializable {
-
+@ApiModel(description = "没有包含用户角色的Vo")
+public class NoRoleUserVo {
     /**
      * id
      */
@@ -31,11 +33,6 @@ public class UserVO implements Serializable {
      * 用户简介
      */
     private String userProfile;
-
-    /**
-     * 用户角色：user/admin/ban
-     */
-    private String userRole;
 
     /**
      * 创建时间

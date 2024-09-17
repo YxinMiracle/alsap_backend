@@ -6,6 +6,8 @@ package com.yxinmiracle.alsap.model.vo;
  * @Gitee: https://gitee.com/yxinmiracle
  */
 
+import com.yxinmiracle.alsap.model.vo.graph.GraphNodeVo;
+import com.yxinmiracle.alsap.model.vo.graph.RelationVo;
 import lombok.Data;
 
 import java.io.Serializable;

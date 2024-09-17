@@ -13,7 +13,7 @@ import com.yxinmiracle.alsap.model.dto.user.UserQueryRequest;
 import com.yxinmiracle.alsap.model.entity.User;
 import com.yxinmiracle.alsap.model.enums.UserRoleEnum;
 import com.yxinmiracle.alsap.model.vo.LoginUserVO;
-import com.yxinmiracle.alsap.model.vo.UserVO;
+import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import com.yxinmiracle.alsap.service.UserService;
 import com.yxinmiracle.alsap.utils.SqlUtils;
 import java.util.ArrayList;
