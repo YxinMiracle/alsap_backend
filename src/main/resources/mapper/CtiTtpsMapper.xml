@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxinmiracle.alsap.mapper.CtiTtpsMapper">
+
+    <resultMap id="BaseResultMap" type="com.yxinmiracle.alsap.model.entity.CtiTtps">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="ctiId" column="ctiId" jdbcType="BIGINT"/>
+            <result property="sentLevelTtp" column="sentLevelTtp" jdbcType="VARCHAR"/>
+            <result property="articleLevelTtp" column="articleLevelTtp" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,ctiId,sentLevelTtp,
+        articleLevelTtp
+    </sql>
+</mapper>

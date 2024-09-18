@@ -1,9 +1,8 @@
 package com.yxinmiracle.alsap.utils;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public class ObjectUtils {
+public class YxinMiracleObjectUtils {
 
     /**
      * Checks if all fields in any given object are null.

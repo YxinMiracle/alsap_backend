@@ -10,6 +10,7 @@ import java.util.Base64;
 
 public class CryptoUtils {
     private static final String DES_KEY = "YxinMiracle-ALSAP"; // DES密钥原文
+    private static final String INNER_REQ_VALUE = "askliyij%kkefoo)))Yxi0==@@cdfMiracle"; // DES密钥原文
     private static final String CHARSET = "UTF-8"; // 字符集
     private static final String DES_TRANSFORMATION = "DES/ECB/PKCS5Padding"; // DES算法/工作模式/填充方式
 
@@ -62,11 +63,27 @@ public class CryptoUtils {
         return DatatypeConverter.printHexBinary(hash).toLowerCase();
     }
 
+    /**
+     * 解析内部请求是否合法
+     * @param signature
+     * @return
+     */
+    public static boolean validateInnerRequest(String signature) {
+        try {
+            return signature.equals(INNER_REQ_VALUE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // 判断请求时间是否合法
     public static boolean isTimestampValid(long requestTimestamp) {
         long currentTimestamp = System.currentTimeMillis();
         return Math.abs(currentTimestamp - requestTimestamp) <= TIME_THRESHOLD;
     }
+
+
 
     public static void main(String[] args) {
         try {
@@ -81,4 +98,5 @@ public class CryptoUtils {
             System.out.println("Failed to decrypt data.");
         }
     }
+
 }
