@@ -83,6 +83,9 @@ public class DecryptRequestBodyAspect {
                 throw new BusinessException(ErrorCode.ILLEGALITY_REQUEST_ERROR);
             Object[] args = buildArguments(joinPoint, decryptedData, request);
             return joinPoint.proceed(args);
+        } catch (BusinessException e) {
+            // 保留方法内部中出现的BusinessException错误
+            throw e;
         } catch (Exception e) {
             log.error("用户出现不合法请求,{}", e.getMessage());
             throw new BusinessException(ErrorCode.ILLEGALITY_REQUEST_ERROR);

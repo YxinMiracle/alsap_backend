@@ -45,14 +45,17 @@ public class AiServer {
     @Resource
     private ItemService itemService;
 
-    private static final String AUTH_HEADER = "auth";
+    @Value("${aiServer.authHeader}")
+    private static String AUTH_HEADER;
 
-    private static final String AUTH_REQUEST_SECRET = "secretKey";
+    @Value("${aiServer.authSecret}")
+    private static String AUTH_REQUEST_SECRET;
 
     @Value("${aiServer.host}")
     public static String AI_SERVER_URL;
 
     public static String ttpServerPath = "/annotation/cti";
+    public static String extractCtiTtpPath = "/ttp/extract";
     public static String getGraphServePath = "/graph/cti";
     public static String copyModelData = "/copy";
 
@@ -76,6 +79,29 @@ public class AiServer {
         // 开始进行请求
         return RequestUtils.post(AI_SERVER_URL + ttpServerPath, requestBody, headers, ModelResult.class);
     }
+
+    /**
+     * 根据cti的内容和id去获取关于这个cti的ttp内容
+     * 调用ai服务的ttp抽取模型
+     * @param ctiContent
+     * @return
+     */
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 5000, multiplier = 2))
+    public ModelResult getCtiContentTtp(String ctiContent) {
+        // 构建请求数据
+        Cti cti = new Cti();
+        cti.setContent(ctiContent);
+        cti.setId(1789287768640294914L);
+        String requestBody = JSONUtil.toJsonStr(cti);
+
+        // 构建header
+        Map<String, String> headers = new HashMap<>();
+        headers.put(AUTH_HEADER, AUTH_REQUEST_SECRET);
+
+        // 开始进行请求
+        return RequestUtils.post(AI_SERVER_URL + extractCtiTtpPath, requestBody, headers, ModelResult.class);
+    }
+
 
     public String pythonCreateGraph(Cti  cti) {
         // 这里添加完之后，需要调用ai服务，进行模型的抽取

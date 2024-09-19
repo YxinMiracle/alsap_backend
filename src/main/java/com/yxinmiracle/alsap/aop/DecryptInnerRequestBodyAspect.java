@@ -32,6 +32,7 @@ public class DecryptInnerRequestBodyAspect {
 
     /**
      * 对内部请求进行加密解密
+     *
      * @param joinPoint
      * @return
      * @throws Throwable
@@ -62,6 +63,8 @@ public class DecryptInnerRequestBodyAspect {
             if (!CryptoUtils.validateInnerRequest(signature))
                 throw new BusinessException(ErrorCode.ILLEGALITY_REQUEST_ERROR);
             return joinPoint.proceed();
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             log.error("用户出现不合法请求,{}", e.getMessage());
             throw new BusinessException(ErrorCode.ILLEGALITY_REQUEST_ERROR);

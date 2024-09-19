@@ -52,7 +52,7 @@ public class TtpInnerController {
      * @param request
      * @return
      */
-    @PostMapping("/list/page")
+    @PostMapping("/add")
     @ApiOperation(value = "内部请求，用于添加ttp")
     @Transactional
     @DecryptInnerRequestBody
@@ -64,13 +64,13 @@ public class TtpInnerController {
 
         // 数据校验
         if (ttpAddRequest.getArticleLevelTtp().length() <= 10 || ttpAddRequest.getSentLevelTtp().length() <= 10) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"非法数据格式，请勿非法请求接口");
         }
 
         // 查看这个ctiId是否存在于数据库中
         Long ctiId = ttpAddRequest.getCtiId();
         Cti cti = ctiService.getById(ctiId);
-        ThrowUtils.throwIf(ObjectUtils.isEmpty(cti), ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(cti), ErrorCode.PARAMS_ERROR, "非法CTI_ID，请勿非法请求接口");
 
         // 校验完成，可以进行数据添加
         CtiTtps ctiTtps = new CtiTtps();

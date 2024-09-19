@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * cti接口
@@ -113,14 +114,21 @@ public class CtiController {
         Cti cti = new Cti();
         BeanUtils.copyProperties(ctiAddRequest, cti);
 
-        // 请求AI服务获取对应的数据
-        ModelResult modelResult = Optional.ofNullable(aiServer.getCtiExtractorEntityAndRelationAns(ctiAddRequest.getContent()))
-                .orElseThrow(() -> new BusinessException(ErrorCode.AI_SERVER_ERROR));
-        cti.setWordList(JSONUtil.toJsonStr(modelResult.getWordList()));
-        cti.setLabelList(JSONUtil.toJsonStr(modelResult.getLabelList()));
 
-        boolean result = ctiService.save(cti);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        // 请求AI服务获取对应的数据
+//        ModelResult modelResult = Optional.ofNullable(aiServer.getCtiExtractorEntityAndRelationAns(ctiAddRequest.getContent()))
+//                .orElseThrow(() -> new BusinessException(ErrorCode.AI_SERVER_ERROR));
+//        cti.setWordList(JSONUtil.toJsonStr(modelResult.getWordList()));
+//        cti.setLabelList(JSONUtil.toJsonStr(modelResult.getLabelList()));
+//
+//        boolean result = ctiService.save(cti);
+//        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+
+        // 调用异步方法
+//        CompletableFuture.runAsync(() -> {
+//            judgeService.doJudge(questionSubmitId);
+//        });
+
         return ResultUtils.success(cti.getId());
     }
 
