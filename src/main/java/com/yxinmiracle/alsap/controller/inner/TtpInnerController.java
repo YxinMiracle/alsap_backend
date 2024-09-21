@@ -6,6 +6,7 @@ package com.yxinmiracle.alsap.controller.inner;
  * @Gitee: https://gitee.com/yxinmiracle
  */
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yxinmiracle.alsap.annotation.DecryptInnerRequestBody;
 import com.yxinmiracle.alsap.common.BaseResponse;
 import com.yxinmiracle.alsap.common.ErrorCode;
@@ -15,12 +16,14 @@ import com.yxinmiracle.alsap.exception.ThrowUtils;
 import com.yxinmiracle.alsap.model.dto.ttp.inner.TtpAddRequest;
 import com.yxinmiracle.alsap.model.entity.Cti;
 import com.yxinmiracle.alsap.model.entity.CtiTtps;
+import com.yxinmiracle.alsap.model.enums.TtpStatusEnum;
 import com.yxinmiracle.alsap.service.CtiService;
 import com.yxinmiracle.alsap.service.CtiTtpsService;
 import com.yxinmiracle.alsap.utils.YxinMiracleObjectUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.ibatis.builder.BuilderException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +49,7 @@ public class TtpInnerController {
     private CtiTtpsService ctiTtpsService;
 
     /**
-     * 根据请求参数来查询数据
+     * 提供给ai服务进行请求，这个请求主要是接受ai服务处理好的情报数据
      *
      * @param ttpAddRequest
      * @param request
@@ -73,10 +76,20 @@ public class TtpInnerController {
         ThrowUtils.throwIf(ObjectUtils.isEmpty(cti), ErrorCode.PARAMS_ERROR, "非法CTI_ID，请勿非法请求接口");
 
         // 校验完成，可以进行数据添加
-        CtiTtps ctiTtps = new CtiTtps();
-        BeanUtils.copyProperties(ttpAddRequest, ctiTtps);
-        boolean save = ctiTtpsService.save(ctiTtps);
+        CtiTtps ctiTtpsInDb = new CtiTtps();
+        try {
+            ctiTtpsInDb = ctiTtpsService.getOne(new LambdaQueryWrapper<CtiTtps>().eq(CtiTtps::getCtiId, ctiId), true);
+            ctiTtpsInDb.setStatus(TtpStatusEnum.COMPLETED.getValue());
+            ctiTtpsInDb.setSentLevelTtp(ttpAddRequest.getSentLevelTtp());
+            ctiTtpsInDb.setArticleLevelTtp(ttpAddRequest.getArticleLevelTtp());
+        }catch (Exception e){
+            log.error("数据库getOne出现错误，需要进行调整，可能出现了冗余数据");
+            throw new BusinessException(ErrorCode.DB_DATA_ERROR);
+        }
+
+        boolean save = ctiTtpsService.updateById(ctiTtpsInDb);
         ThrowUtils.throwIf(!save, ErrorCode.PARAMS_ERROR);
+
         return ResultUtils.success(true);
     }
 

@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.yxinmiracle.alsap.aiService.AiServer;
 import com.yxinmiracle.alsap.annotation.AuthCheck;
 import com.yxinmiracle.alsap.annotation.DecryptRequestBody;
+import com.yxinmiracle.alsap.common.AiServerRet;
 import com.yxinmiracle.alsap.common.BaseResponse;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.common.ResultUtils;
@@ -16,8 +17,10 @@ import com.yxinmiracle.alsap.exception.BusinessException;
 import com.yxinmiracle.alsap.exception.ThrowUtils;
 import com.yxinmiracle.alsap.model.dto.cti.*;
 import com.yxinmiracle.alsap.model.entity.*;
+import com.yxinmiracle.alsap.model.enums.TtpStatusEnum;
 import com.yxinmiracle.alsap.model.model.ModelResult;
 import com.yxinmiracle.alsap.model.vo.cti.CtiDetailVo;
+import com.yxinmiracle.alsap.model.vo.cti.CtiTtpExtractVo;
 import com.yxinmiracle.alsap.model.vo.cti.CtiVo;
 import com.yxinmiracle.alsap.model.vo.cti.CtiWordLabelVo;
 import com.yxinmiracle.alsap.model.vo.user.NoRoleUserVo;
@@ -26,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +71,9 @@ public class CtiController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private CtiTtpsService ctiTtpsService;
 
     // region 增删改查
 
@@ -114,7 +121,7 @@ public class CtiController {
         Cti cti = new Cti();
         BeanUtils.copyProperties(ctiAddRequest, cti);
 
-
+        cti.setId(1789287766325039106L); // 模拟id
         // 请求AI服务获取对应的数据
 //        ModelResult modelResult = Optional.ofNullable(aiServer.getCtiExtractorEntityAndRelationAns(ctiAddRequest.getContent()))
 //                .orElseThrow(() -> new BusinessException(ErrorCode.AI_SERVER_ERROR));
@@ -124,12 +131,42 @@ public class CtiController {
 //        boolean result = ctiService.save(cti);
 //        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
 
+
         // 调用异步方法
 //        CompletableFuture.runAsync(() -> {
-//            judgeService.doJudge(questionSubmitId);
+//            aiServer.getCtiContentTtp(cti);
 //        });
 
         return ResultUtils.success(cti.getId());
+    }
+
+    @GetMapping("/add_test")
+    public BaseResponse<Long> addCtiReport2(HttpServletRequest request) {
+        Cti tempCti = ctiService.getById(1789287766325039106L);// 模拟id
+
+        // 添加一个cti的ttp初始信息，随后我
+        // 先进行判定，看看数据库中是否存在这个对象，要是存在直接报错
+        int ctiTtpInDbCount = ctiTtpsService.list(new LambdaQueryWrapper<CtiTtps>().eq(CtiTtps::getCtiId, tempCti.getId())).size();
+        ThrowUtils.throwIf(ctiTtpInDbCount > 0, ErrorCode.PARAMS_ERROR);
+
+        CtiTtps ctiTtps = new CtiTtps();
+        ctiTtps.setCtiId(tempCti.getId());
+        ctiTtps.setStatus(TtpStatusEnum.PROCESSING.getValue()); // 更新初始化的状态，更改为正在处理中
+
+        ctiTtpsService.save(ctiTtps);
+        // 调用异步方法
+        CompletableFuture.runAsync(() -> {
+            // 该请求没有返回值，ai服务处理好之后会调用后端add ttp
+            // 要是这里请求出现错误，那么就更新状态为需要后续进行重试，或者用户手动进行重试请求。
+            CtiTtpExtractVo ctiTtpExtractVo = CtiTtpExtractVo.builder().content(tempCti.getContent()).ctiId(tempCti.getId()).build();
+            AiServerRet aiServerRet = aiServer.getCtiContentTtp(ctiTtpExtractVo);
+            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()){
+                ctiTtps.setStatus(TtpStatusEnum.Retrying.getValue());
+                ctiTtpsService.updateById(ctiTtps);
+            }
+        });
+
+        return ResultUtils.success(tempCti.getId());
     }
 
 

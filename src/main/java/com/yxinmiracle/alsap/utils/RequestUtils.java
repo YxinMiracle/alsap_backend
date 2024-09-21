@@ -56,4 +56,17 @@ public class RequestUtils {
         return responseBean;
     }
 
+    public static void postWithNoRet(String url, String postBody, Map<String, String> headerMap) {
+        Long currentTime = System.currentTimeMillis();
+        log.info("[RequestUtils.postWithNoRet  request...] in: currentTime={}, url={}, postBody={}, headerMap={}", currentTime, url, postBody, headerMap);
+        // 获取到对应的相应str
+        String responseStr = HttpRequest
+                .post(url)
+                .body(postBody, CONTENT_TYPE_JSON)
+                .timeout(TIME_OUT_MILLISECONDS)
+                .addHeaders(headerMap)
+                .execute()
+                .body();
+    }
+
 }

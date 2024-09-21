@@ -20,6 +20,4 @@ public class ModelResult implements Serializable {
 
     private List<List<String>> labelList;
 
-
-
 }

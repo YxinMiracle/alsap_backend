@@ -16,6 +16,7 @@ public enum ErrorCode {
     ILLEGALITY_REQUEST_ERROR(40400, "不合法的请求"),
     TIME_REQUEST_ERROR(40500, "您电脑时间与北京时间不一致，请重新设置一致后，刷新页面即可正常显示!"),
     AI_SERVER_ERROR(40600, "AI服务请求异常"),
+    DB_DATA_ERROR(40500, "数据库出现数据异常"),
     SYSTEM_ERROR(50000, "系统内部异常"),
     OPERATION_ERROR(50001, "操作失败"),
     EMPTY_DATA(50002, "数据为空");
