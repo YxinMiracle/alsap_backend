@@ -118,7 +118,7 @@ public class GraphController {
             List<CtiVo> endEntityRelatedCti = Optional.ofNullable(endEntityRelatedCtiId).filter(ids -> !ids.isEmpty()).map(ids -> ctiService.getCtiVOList(ctiService.listByIds(ids), itemId2ItemMap)).orElse(Collections.emptyList());
             endGraphNode.setRelatedCti(endEntityRelatedCti);
 
-            // 构建关系，这里的item会是stix中的关系类型
+            // 构建关系，这里的item会是stix中的关系类型 1
             Long relationTypeId = relation.getRelationTypeId();
             RelationType dbRelationTypeObj = relationTypeMap.get(relationTypeId);
             Long startNodeFatherItemDbId = dbRelationTypeObj.getStartEntityItemId();
