@@ -13,6 +13,7 @@ import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.common.ResultUtils;
 import com.yxinmiracle.alsap.exception.BusinessException;
 import com.yxinmiracle.alsap.exception.ThrowUtils;
+import com.yxinmiracle.alsap.manager.TtpManager;
 import com.yxinmiracle.alsap.model.dto.ttp.inner.TtpAddRequest;
 import com.yxinmiracle.alsap.model.entity.Cti;
 import com.yxinmiracle.alsap.model.entity.CtiTtps;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 情报ttp接口
@@ -47,6 +49,9 @@ public class TtpInnerController {
 
     @Resource
     private CtiTtpsService ctiTtpsService;
+
+    @Resource
+    private TtpManager ttpManager;
 
     /**
      * 提供给ai服务进行请求，这个请求主要是接受ai服务处理好的情报数据
@@ -82,6 +87,10 @@ public class TtpInnerController {
             ctiTtpsInDb.setStatus(TtpStatusEnum.COMPLETED.getValue());
             ctiTtpsInDb.setSentLevelTtp(ttpAddRequest.getSentLevelTtp());
             ctiTtpsInDb.setArticleLevelTtp(ttpAddRequest.getArticleLevelTtp());
+
+            String url = ttpManager.buildTtpConfigData(ttpAddRequest.getArticleLevelTtp());
+            
+
         }catch (Exception e){
             log.error("数据库getOne出现错误，需要进行调整，可能出现了冗余数据");
             throw new BusinessException(ErrorCode.DB_DATA_ERROR);
