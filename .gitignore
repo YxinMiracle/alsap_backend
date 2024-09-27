@@ -2,6 +2,7 @@ application-local.yml
 application-prod.yml
 note.md
 src/main/java/**/utils/CryptoUtils.java
+.temp
 
 HELP.md
 target/

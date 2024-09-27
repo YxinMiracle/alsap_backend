@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -73,6 +74,73 @@ public class TtpMeta implements Serializable {
         private List<String> metadata;
         private List<String> links;
         private Boolean showSubtechniques;
+
+        public static class Builder {
+            private String techniqueID;
+            private String tactic;
+            private String color = "#fc3b3b";
+            private String comment = "";
+            private Boolean enabled = true;
+            private List<String> metadata = new ArrayList<>();
+            private List<String> links = new ArrayList<>();
+            private Boolean showSubtechniques = false;
+
+            public Builder techniqueID(String techniqueID) {
+                this.techniqueID = techniqueID;
+                return this;
+            }
+
+            public Builder tactic(String tactic) {
+                this.tactic = tactic;
+                return this;
+            }
+
+            public Builder color(String color) {
+                this.color = color;
+                return this;
+            }
+
+            public Builder comment(String comment) {
+                this.comment = comment;
+                return this;
+            }
+
+            public Builder enabled(Boolean enabled) {
+                this.enabled = enabled;
+                return this;
+            }
+
+            public Builder metadata(List<String> metadata) {
+                this.metadata = metadata;
+                return this;
+            }
+
+            public Builder links(List<String> links) {
+                this.links = links;
+                return this;
+            }
+
+            public Builder showSubtechniques(Boolean showSubtechniques) {
+                this.showSubtechniques = showSubtechniques;
+                return this;
+            }
+
+            public TechniquesConfig build() {
+                return new TechniquesConfig(techniqueID, tactic, color, comment, enabled, metadata, links, showSubtechniques);
+            }
+        }
+
+        private TechniquesConfig(String techniqueID, String tactic, String color, String comment,
+                                 Boolean enabled, List<String> metadata, List<String> links, Boolean showSubtechniques) {
+            this.techniqueID = techniqueID;
+            this.tactic = tactic;
+            this.color = color;
+            this.comment = comment;
+            this.enabled = enabled;
+            this.metadata = metadata;
+            this.links = links;
+            this.showSubtechniques = showSubtechniques;
+        }
     }
 
     private GradientConfig gradient;

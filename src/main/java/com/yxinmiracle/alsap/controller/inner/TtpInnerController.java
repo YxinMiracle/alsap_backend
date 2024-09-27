@@ -6,6 +6,8 @@ package com.yxinmiracle.alsap.controller.inner;
  * @Gitee: https://gitee.com/yxinmiracle
  */
 
+import cn.hutool.json.JSONException;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yxinmiracle.alsap.annotation.DecryptInnerRequestBody;
 import com.yxinmiracle.alsap.common.BaseResponse;
@@ -18,6 +20,7 @@ import com.yxinmiracle.alsap.model.dto.ttp.inner.TtpAddRequest;
 import com.yxinmiracle.alsap.model.entity.Cti;
 import com.yxinmiracle.alsap.model.entity.CtiTtps;
 import com.yxinmiracle.alsap.model.enums.TtpStatusEnum;
+import com.yxinmiracle.alsap.model.meta.TtpMeta;
 import com.yxinmiracle.alsap.service.CtiService;
 import com.yxinmiracle.alsap.service.CtiTtpsService;
 import com.yxinmiracle.alsap.utils.YxinMiracleObjectUtils;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -72,7 +76,7 @@ public class TtpInnerController {
 
         // 数据校验
         if (ttpAddRequest.getArticleLevelTtp().length() <= 10 || ttpAddRequest.getSentLevelTtp().length() <= 10) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"非法数据格式，请勿非法请求接口");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "非法数据格式，请勿非法请求接口");
         }
 
         // 查看这个ctiId是否存在于数据库中
@@ -88,10 +92,15 @@ public class TtpInnerController {
             ctiTtpsInDb.setSentLevelTtp(ttpAddRequest.getSentLevelTtp());
             ctiTtpsInDb.setArticleLevelTtp(ttpAddRequest.getArticleLevelTtp());
 
-            String url = ttpManager.buildTtpConfigData(ttpAddRequest.getArticleLevelTtp());
-            
-
-        }catch (Exception e){
+            // todo 耗时操作
+            // 将ttp变成对象形式，给manger进行存储，这里注意ai服务可能穿来不正确的信息
+            List<TtpMeta.TechniquesConfig> techniquesConfigList = JSONUtil.toList(ttpAddRequest.getArticleLevelTtp(), TtpMeta.TechniquesConfig.class);
+            String savePath = ttpManager.buildTtpConfigData(techniquesConfigList, ctiId);
+            ctiTtpsInDb.setSavaPath(savePath);
+        } catch (JSONException jsonException) {
+            log.error("json解析报错", jsonException);
+            throw new BusinessException(ErrorCode.AI_SERVER_ERROR);
+        } catch (Exception e) {
             log.error("数据库getOne出现错误，需要进行调整，可能出现了冗余数据");
             throw new BusinessException(ErrorCode.DB_DATA_ERROR);
         }
@@ -101,6 +110,5 @@ public class TtpInnerController {
 
         return ResultUtils.success(true);
     }
-
 
 }

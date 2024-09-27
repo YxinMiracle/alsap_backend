@@ -10,6 +10,7 @@
             <result property="sentLevelTtp" column="sentLevelTtp" jdbcType="VARCHAR"/>
             <result property="articleLevelTtp" column="articleLevelTtp" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="savaPath" column="savaPath" jdbcType="VARCHAR"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
@@ -17,7 +18,7 @@
 
     <sql id="Base_Column_List">
         id,ctiId,sentLevelTtp,
-        articleLevelTtp,status,createTime,
+        articleLevelTtp,status,savaPath,createTime,
         updateTime,isDelete
     </sql>
 </mapper>

@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,6 +89,7 @@ public class CtiController {
     @ApiOperation(value = "根据Cti查询信息返回CtiVo信息")
     @DecryptRequestBody
     public BaseResponse<Page<CtiVo>> getCtiByPage(@RequestBody CtiQueryRequest ctiQueryRequest, HttpServletRequest request) {
+
         // 获取当前页数以及对应的请求大小
         long current = ctiQueryRequest.getCurrent();
         long size = ctiQueryRequest.getPageSize();
@@ -121,21 +123,40 @@ public class CtiController {
         Cti cti = new Cti();
         BeanUtils.copyProperties(ctiAddRequest, cti);
 
-        cti.setId(1789287766325039106L); // 模拟id
-        // 请求AI服务获取对应的数据
+        // todo 改为异步执行
+        // 请求AI服务获取实体数据
 //        ModelResult modelResult = Optional.ofNullable(aiServer.getCtiExtractorEntityAndRelationAns(ctiAddRequest.getContent()))
 //                .orElseThrow(() -> new BusinessException(ErrorCode.AI_SERVER_ERROR));
 //        cti.setWordList(JSONUtil.toJsonStr(modelResult.getWordList()));
 //        cti.setLabelList(JSONUtil.toJsonStr(modelResult.getLabelList()));
 //
-//        boolean result = ctiService.save(cti);
-//        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        if (StringUtils.isAnyBlank(ctiAddRequest.getContent(), ctiAddRequest.getTitle())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        boolean result = ctiService.save(cti);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
 
+        // 添加一个cti的ttp初始信息，随后我
+        // 先进行判定，看看数据库中是否存在这个对象，要是存在直接报错
+        int ctiTtpInDbCount = ctiTtpsService.list(new LambdaQueryWrapper<CtiTtps>().eq(CtiTtps::getCtiId, cti.getId())).size();
+        ThrowUtils.throwIf(ctiTtpInDbCount > 0, ErrorCode.PARAMS_ERROR);
 
+        CtiTtps ctiTtps = new CtiTtps();
+        ctiTtps.setCtiId(cti.getId());
+        ctiTtps.setStatus(TtpStatusEnum.PROCESSING.getValue()); // 更新初始化的状态，更改为正在处理中
+
+        ctiTtpsService.save(ctiTtps);
         // 调用异步方法
-//        CompletableFuture.runAsync(() -> {
-//            aiServer.getCtiContentTtp(cti);
-//        });
+        CompletableFuture.runAsync(() -> {
+            // 该请求没有返回值，ai服务处理好之后会调用后端add ttp
+            // 要是这里请求出现错误，那么就更新状态为需要后续进行重试，或者用户手动进行重试请求。
+            CtiTtpExtractVo ctiTtpExtractVo = CtiTtpExtractVo.builder().content(cti.getContent()).ctiId(cti.getId()).build();
+            AiServerRet aiServerRet = aiServer.getCtiContentTtp(ctiTtpExtractVo);
+            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()){
+                ctiTtps.setStatus(TtpStatusEnum.Retrying.getValue());
+                ctiTtpsService.updateById(ctiTtps);
+            }
+        });
 
         return ResultUtils.success(cti.getId());
     }

@@ -1,6 +1,8 @@
 package com.yxinmiracle.alsap.manager;
 
 import com.qcloud.cos.COSClient;
+import com.qcloud.cos.model.COSObject;
+import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.yxinmiracle.alsap.config.CosClientConfig;
@@ -46,5 +48,17 @@ public class CosManager {
         PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key,
                 file);
         return cosClient.putObject(putObjectRequest);
+    }
+
+
+    /**
+     * 下载文件
+     * @param key 这个是这个文件在存储桶中的一个位置
+     * @return
+     */
+    public COSObject getObj(String key){
+        GetObjectRequest getObjectRequest = new GetObjectRequest(cosClientConfig.getBucket(), key);
+        COSObject cosObject = cosClient.getObject(getObjectRequest);
+        return cosObject;
     }
 }

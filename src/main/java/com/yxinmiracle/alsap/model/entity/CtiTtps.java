@@ -50,6 +50,11 @@ public class CtiTtps implements Serializable {
     private Integer status;
 
     /**
+     * 存储路径
+     */
+    private String savaPath;
+
+    /**
      * 创建时间
      */
     private Date createTime;

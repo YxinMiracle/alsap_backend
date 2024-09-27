@@ -47,6 +47,7 @@ public class CtiServiceImpl extends ServiceImpl<CtiMapper, Cti>
 
     @Override
     public LambdaUpdateWrapper<Cti> getQueryWrapper(CtiQueryRequest ctiQueryRequest) {
+        // todo 情报搜索功能需要改进
         LambdaUpdateWrapper<Cti> ctiQueryWrapper = new LambdaUpdateWrapper<>();
         if (ctiQueryRequest == null) {
             return ctiQueryWrapper;

@@ -34,16 +34,6 @@
   },
   "hideDisabled": false,
   "techniques": [
-    {
-      "techniqueID": "T1203",
-      "tactic": "execution",
-      "color": "#fc3b3b",
-      "comment": "",
-      "enabled": true,
-      "metadata": [],
-      "links": [],
-      "showSubtechniques": false
-    }
   ],
   "gradient": {
     "colors": [
