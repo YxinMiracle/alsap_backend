@@ -63,4 +63,4 @@ steps:
 # drone执行触发器
 trigger:
   branch:
-    - master
+    - main
