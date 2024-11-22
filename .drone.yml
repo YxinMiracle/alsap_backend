@@ -19,9 +19,9 @@ steps:
         path: /root/.m2
       - name: run_script
         path: /app/build
-    command:
+    commands:
       - cp /app/build/application-prod.yml src/main/resources/application-prod.yml
-      - mvn clean package -Dmaven.test.skip=true
+      - mvn clean package -DskipTests=true -s settings.xml -B -U
       - cp target/alsap_backend-0.0.1-SNAPSHOT.jar /app/build/alsap_backend-0.0.1-SNAPSHOT.jar
       - cp Dockerfile /app/build/Dockerfile
       - cp run.sh /app/build/run.sh
@@ -46,19 +46,19 @@ steps:
         - chmod +x run.sh
         - ./run.sh
 
-  - name: 构建通知
-    image: plugins/webhook
-    pull: if-not-exists
-    settings:
-      url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dbeff4aa-f45d-4c04-9408-2b3896e3b66d
-      content_type: application/json
-      template: |
-        {
-          "magtype": "markdown",
-          "markdown": {
-            "content": "我又部署项目了"
-          }
-        }
+#  - name: 构建通知
+#    image: plugins/webhook
+#    pull: if-not-exists
+#    settings:
+#      url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dbeff4aa-f45d-4c04-9408-2b3896e3b66d
+#      content_type: application/json
+#      template: |
+#        {
+#          "magtype": "markdown",
+#          "markdown": {
+#            "content": "我又部署项目了asasdqasdasdasdasdasdweqwe"
+#          }
+#        }
 
 # drone执行触发器
 trigger:
