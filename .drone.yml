@@ -47,7 +47,7 @@ steps:
         - ./run.sh
 
   - name: 构建通知
-    iamge: plugins/webhook
+    image: plugins/webhook
     pull: if-not-exists
     settings:
       url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dbeff4aa-f45d-4c04-9408-2b3896e3b66d
