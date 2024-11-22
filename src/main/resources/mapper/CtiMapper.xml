@@ -11,6 +11,9 @@
         <result property="userId" column="userId" jdbcType="BIGINT"/>
         <result property="wordList" column="wordList" jdbcType="VARCHAR"/>
         <result property="labelList" column="labelList" jdbcType="VARCHAR"/>
+        <result property="postUrl" column="postUrl" jdbcType="VARCHAR"/>
+        <result property="htmlText" column="htmlText" jdbcType="VARCHAR"/>
+        <result property="abstractText" column="abstractText" jdbcType="VARCHAR"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
         <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
@@ -72,5 +75,128 @@
 
     </select>
 
+    <!--图相关查询！！！！-->
+    <resultMap id="GraphVoResultMap" type="com.yxinmiracle.alsap.model.vo.graph.GraphVo">
+        <association property="startNode" javaType="com.yxinmiracle.alsap.model.vo.graph.GraphNodeVo">
+            <result property="nodeId" column="startNodeId"/>
+            <result property="entityName" column="startNodeEntityName"/>
+            <result property="createTime" column="startNodeCreateTime"/>
+            <result property="updateTime" column="startNodeUpdateTime"/>
+            <result property="ctiId" column="startNodeCtiId"/>
+            <association property="itemData" javaType="com.yxinmiracle.alsap.model.vo.item.ItemVo">
+                <result property="itemName" column="startNodeItemName"/>
+                <result property="itemType" column="startNodeItemType"/>
+                <result property="backgroundColor" column="startNodeItemBackgroundColor"/>
+                <result property="createTime" column="startNodeItemCreateTime"/>
+                <result property="textColor" column="startNodeItemTextColor"/>
+                <result property="itemTypeContent" column="startNodeItemTypeContent"/>
+                <result property="id" column="startNodeItemId"/>
+                <result property="updateTime" column="startNodeItemUpdateTime"/>
+            </association>
+        </association>
+        <association property="endNode" javaType="com.yxinmiracle.alsap.model.vo.graph.GraphNodeVo">
+            <result property="nodeId" column="endNodeId"/>
+            <result property="entityName" column="endNodeEntityName"/>
+            <result property="createTime" column="endNodeCreateTime"/>
+            <result property="updateTime" column="endNodeUpdateTime"/>
+            <result property="ctiId" column="endNodeCtiId"/>
+            <association property="itemData" javaType="com.yxinmiracle.alsap.model.vo.item.ItemVo">
+                <result property="itemName" column="endNodeItemName"/>
+                <result property="itemType" column="endNodeItemType"/>
+                <result property="backgroundColor" column="endNodeItemBackgroundColor"/>
+                <result property="createTime" column="endNodeItemCreateTime"/>
+                <result property="textColor" column="endNodeItemTextColor"/>
+                <result property="itemTypeContent" column="endNodeItemTypeContent"/>
+                <result property="id" column="endNodeItemId"/>
+                <result property="updateTime" column="endNodeItemUpdateTime"/>
+            </association>
+        </association>
+        <association property="relation" javaType="com.yxinmiracle.alsap.model.vo.graph.RelationVo">
+            <result property="relationName" column="relationName"/>
+        </association>
+    </resultMap>
+    <select id="getGraphDataByCtiId" resultMap="GraphVoResultMap" parameterType="long">
+        SELECT
+            -- 头节点相关
+            e1.ctiId AS startNodeCtiId, -- 头节点所属情报的id
+            e1.id AS startNodeId, -- 头节点的id
+            e1.entityName AS startNodeEntityName, -- 头节点的名称
+            e1.createTime AS startNodeCreateTime, -- 头节点创建时间
+            e1.updateTime AS startNodeUpdateTime, -- 头节点更新时间
+--
+            i1.itemName AS startNodeItemName, -- 头节点item名称
+            i1.itemType AS startNodeItemType, -- 头节点item类型 是1 还是 2
+            i1.backgroundColor AS startNodeItemBackgroundColor, -- 头节点item背景颜色
+            i1.createTime AS startNodeItemCreateTime, -- 头节点item创建时间
+            i1.textColor AS startNodeItemTextColor, -- 头节点item字体时间
+            i1.itemTypeContent AS startNodeItemTypeContent, -- 头节点itemTypeContent
+            i1.id AS startNodeItemId, -- 头节点对应item的id
+            i1.updateTime AS startNodeItemUpdateTime, -- 头节点对应的itemUpdateTime
+
+            -- 尾节点相关
+            e2.ctiId AS endNodeCtiId, -- 头节点所属情报的id
+            e2.id AS endNodeId, -- 头节点的id
+            e2.entityName AS endNodeEntityName, -- 头节点的名称
+            e2.createTime AS endNodeCreateTime, -- 头节点创建时间
+            e2.updateTime AS endNodeUpdateTime, -- 头节点更新时间
+
+            i2.itemName AS endNodeItemName, -- 头节点item名称
+            i2.itemType AS endNodeItemType, -- 头节点item类型 是1 还是 2
+            i2.backgroundColor AS endNodeItemBackgroundColor, -- 头节点item背景颜色
+            i2.createTime AS endNodeItemCreateTime, -- 头节点item创建时间
+            i2.textColor AS endNodeItemTextColor, -- 头节点item字体时间
+            i2.itemTypeContent AS endNodeItemTypeContent, -- 头节点itemTypeContent
+            i2.id AS endNodeItemId, -- 头节点对应item的id
+            i2.updateTime AS endNodeItemUpdateTime, -- 头节点对应的itemUpdateTime
+
+            rt.relationName as relationName
+        FROM
+            relation r
+                LEFT JOIN entity e1 ON r.startCtiEntityId = e1.id
+                LEFT JOIN entity e2 ON r.endCtiEntityId = e2.id
+                LEFT JOIN item i1 ON e1.itemId = i1.id
+                LEFT JOIN item i2 ON e2.itemId = i2.id
+                LEFT JOIN relation_type rt ON r.relationTypeId = rt.id
+        WHERE
+            r.ctiId = #{ctiId}
+          and
+            e1.isDelete = 0
+          and
+            e2.isDelete = 0
+          and
+            rt.isDelete = 0
+        GROUP BY
+            e1.id, e2.id, rt.relationName
+    </select>
+
+    <!--图相关查询！！！！-->
+    <resultMap id="CtiVoResultMap" type="com.yxinmiracle.alsap.model.vo.cti.CtiVo">
+        <result property="id" column="id"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="title" column="title"/>
+        <result property="scoNum" column="scoNum"/>
+        <result property="sdoNum" column="sdoNum"/>
+        <result property="hasGraph" column="hasGraph"/>
+<!--        <result property="hasGraph" column="hasGraph"/>-->
+    </resultMap>
+
+    <select id="getNodeRelCtiData" parameterType="com.yxinmiracle.alsap.model.dto.graph.CtiNodeRelCtiQueryRequest" resultMap="CtiVoResultMap">
+        select
+            c1.id as id,
+            c1.createTime as createTime,
+            c1.updateTime as updateTime,
+            c1.title as title,
+            (SELECT COUNT(*) FROM cti_chunk c JOIN item i ON c.itemId = i.id  WHERE c.ctiId = e1.ctiId AND i.itemType = 2) as scoNum, -- 已经找到了对应的cti
+            (SELECT COUNT(*) FROM cti_chunk c JOIN item i ON c.itemId = i.id  WHERE c.ctiId = e1.ctiId AND i.itemType = 1) as sdoNum,
+            (SELECT COUNT(*) FROM relation r where c1.id = r.ctiId) as hasGraph
+        from
+            entity e1
+                JOIN cti c1 on e1.ctiId = c1.id
+        WHERE
+            e1.entityName = #{nodeName}
+          AND
+            c1.id != #{ctiId}
+    </select>
 
 </mapper>

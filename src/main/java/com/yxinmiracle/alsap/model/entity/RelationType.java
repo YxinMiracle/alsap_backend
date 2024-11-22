@@ -11,9 +11,10 @@ import java.util.Date;
 
 /**
  * stix中规定的关系类型，我们规定好，不同类型的实体时间可以存在什么样的关系
+ *
  * @TableName relation_type
  */
-@TableName(value ="relation_type")
+@TableName(value = "relation_type")
 @Data
 public class RelationType implements Serializable {
     /**
@@ -68,12 +69,12 @@ public class RelationType implements Serializable {
         }
         RelationType other = (RelationType) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getStartEntityItemId() == null ? other.getStartEntityItemId() == null : this.getStartEntityItemId().equals(other.getStartEntityItemId()))
-            && (this.getEndEntityItemId() == null ? other.getEndEntityItemId() == null : this.getEndEntityItemId().equals(other.getEndEntityItemId()))
-            && (this.getRelationName() == null ? other.getRelationName() == null : this.getRelationName().equals(other.getRelationName()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
+                && (this.getStartEntityItemId() == null ? other.getStartEntityItemId() == null : this.getStartEntityItemId().equals(other.getStartEntityItemId()))
+                && (this.getEndEntityItemId() == null ? other.getEndEntityItemId() == null : this.getEndEntityItemId().equals(other.getEndEntityItemId()))
+                && (this.getRelationName() == null ? other.getRelationName() == null : this.getRelationName().equals(other.getRelationName()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
     }
 
     @Override

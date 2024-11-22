@@ -1,12 +1,11 @@
 package com.yxinmiracle.alsap.service.impl;
 
-import static com.yxinmiracle.alsap.constant.UserConstant.USER_LOGIN_STATE;
-
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.constant.CommonConstant;
+import com.yxinmiracle.alsap.constant.UserConstant;
 import com.yxinmiracle.alsap.exception.BusinessException;
 import com.yxinmiracle.alsap.mapper.UserMapper;
 import com.yxinmiracle.alsap.model.dto.user.UserQueryRequest;
@@ -16,20 +15,21 @@ import com.yxinmiracle.alsap.model.vo.LoginUserVO;
 import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import com.yxinmiracle.alsap.service.UserService;
 import com.yxinmiracle.alsap.utils.SqlUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.yxinmiracle.alsap.constant.UserConstant.USER_LOGIN_STATE;
+
 /**
  * 用户服务实现
- *
-
  */
 @Service
 @Slf4j
@@ -70,6 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
+            user.setUserRole(UserConstant.DEFAULT_ROLE);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");

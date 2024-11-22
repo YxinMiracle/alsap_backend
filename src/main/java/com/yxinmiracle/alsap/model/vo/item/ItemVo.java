@@ -6,14 +6,12 @@ package com.yxinmiracle.alsap.model.vo.item;
  * @Gitee: https://gitee.com/yxinmiracle
  */
 
-import cn.hutool.json.JSONUtil;
 import com.yxinmiracle.alsap.model.entity.Item;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 除了首页展示之外，item需要在其他地方所展示的vo

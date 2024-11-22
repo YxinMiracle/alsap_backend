@@ -1,6 +1,5 @@
 package com.yxinmiracle.alsap.controller;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.reflect.TypeToken;
@@ -18,7 +17,6 @@ import com.yxinmiracle.alsap.exception.ThrowUtils;
 import com.yxinmiracle.alsap.model.dto.cti.*;
 import com.yxinmiracle.alsap.model.entity.*;
 import com.yxinmiracle.alsap.model.enums.TtpStatusEnum;
-import com.yxinmiracle.alsap.model.model.ModelResult;
 import com.yxinmiracle.alsap.model.vo.cti.CtiDetailVo;
 import com.yxinmiracle.alsap.model.vo.cti.CtiTtpExtractVo;
 import com.yxinmiracle.alsap.model.vo.cti.CtiVo;
@@ -26,14 +24,15 @@ import com.yxinmiracle.alsap.model.vo.cti.CtiWordLabelVo;
 import com.yxinmiracle.alsap.model.vo.user.NoRoleUserVo;
 import com.yxinmiracle.alsap.service.*;
 import io.swagger.annotations.ApiOperation;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +40,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -116,20 +114,16 @@ public class CtiController {
     @ApiOperation("添加Cti情报")
     @DecryptRequestBody
     @Transactional
+    @AuthCheck(mustRole = UserConstant.DEFAULT_ROLE)
     public BaseResponse<Long> addCtiReport(@RequestBody CtiAddRequest ctiAddRequest, HttpServletRequest request) {
         if (ctiAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Cti cti = new Cti();
         BeanUtils.copyProperties(ctiAddRequest, cti);
+        User loginUser = userService.getLoginUser(request);
+        cti.setUserId(loginUser.getId());
 
-        // todo 改为异步执行
-        // 请求AI服务获取实体数据
-//        ModelResult modelResult = Optional.ofNullable(aiServer.getCtiExtractorEntityAndRelationAns(ctiAddRequest.getContent()))
-//                .orElseThrow(() -> new BusinessException(ErrorCode.AI_SERVER_ERROR));
-//        cti.setWordList(JSONUtil.toJsonStr(modelResult.getWordList()));
-//        cti.setLabelList(JSONUtil.toJsonStr(modelResult.getLabelList()));
-//
         if (StringUtils.isAnyBlank(ctiAddRequest.getContent(), ctiAddRequest.getTitle())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -146,49 +140,118 @@ public class CtiController {
         ctiTtps.setStatus(TtpStatusEnum.PROCESSING.getValue()); // 更新初始化的状态，更改为正在处理中
 
         ctiTtpsService.save(ctiTtps);
-        // 调用异步方法
+
+        // 调用异步方法添加ttp数据
         CompletableFuture.runAsync(() -> {
             // 该请求没有返回值，ai服务处理好之后会调用后端add ttp
             // 要是这里请求出现错误，那么就更新状态为需要后续进行重试，或者用户手动进行重试请求。
             CtiTtpExtractVo ctiTtpExtractVo = CtiTtpExtractVo.builder().content(cti.getContent()).ctiId(cti.getId()).build();
             AiServerRet aiServerRet = aiServer.getCtiContentTtp(ctiTtpExtractVo);
-            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()){
+            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()) {
                 ctiTtps.setStatus(TtpStatusEnum.Retrying.getValue());
                 ctiTtpsService.updateById(ctiTtps);
             }
+
+            // 获取实体数据并构图
+            CtiEntityExtractRequest ctiEntityExtractRequest = new CtiEntityExtractRequest();
+            ctiEntityExtractRequest.setContent(cti.getContent());
+            ctiEntityExtractRequest.setCtiId(cti.getId());
+            aiServer.getCtiEntityAndGraph(ctiEntityExtractRequest);
+
+            // 异步请求摘要信息
+            CtiAbstractRequest ctiAbstractRequest = new CtiAbstractRequest();
+            ctiAbstractRequest.setContent(cti.getContent());
+            AiServerRet ctiAbstract = aiServer.getCtiAbstract(ctiAbstractRequest);
+            String data = ctiAbstract.getData();
+            cti.setAbstractText(data);
+            ctiService.updateById(cti);
         });
 
         return ResultUtils.success(cti.getId());
     }
 
-    @GetMapping("/add_test")
-    public BaseResponse<Long> addCtiReport2(HttpServletRequest request) {
-        Cti tempCti = ctiService.getById(1789287766325039106L);// 模拟id
+//    @GetMapping("/add_test")
+//    public BaseResponse<Long> addCtiReport2(HttpServletRequest request) {
+//        Cti tempCti = ctiService.getById(1789287766325039106L);// 模拟id
+//
+//        // 添加一个cti的ttp初始信息，随后我
+//        // 先进行判定，看看数据库中是否存在这个对象，要是存在直接报错
+//        int ctiTtpInDbCount = ctiTtpsService.list(new LambdaQueryWrapper<CtiTtps>().eq(CtiTtps::getCtiId, tempCti.getId())).size();
+//        ThrowUtils.throwIf(ctiTtpInDbCount > 0, ErrorCode.PARAMS_ERROR);
+//
+//        CtiTtps ctiTtps = new CtiTtps();
+//        ctiTtps.setCtiId(tempCti.getId());
+//        ctiTtps.setStatus(TtpStatusEnum.PROCESSING.getValue()); // 更新初始化的状态，更改为正在处理中
+//
+//        ctiTtpsService.save(ctiTtps);
+//        // 调用异步方法
+//        CompletableFuture.runAsync(() -> {
+//            // 该请求没有返回值，ai服务处理好之后会调用后端add ttp
+//            // 要是这里请求出现错误，那么就更新状态为需要后续进行重试，或者用户手动进行重试请求。
+//            CtiTtpExtractVo ctiTtpExtractVo = CtiTtpExtractVo.builder().content(tempCti.getContent()).ctiId(tempCti.getId()).build();
+//            AiServerRet aiServerRet = aiServer.getCtiContentTtp(ctiTtpExtractVo);
+//            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()) {
+//                ctiTtps.setStatus(TtpStatusEnum.Retrying.getValue());
+//                ctiTtpsService.updateById(ctiTtps);
+//            }
+//        });
+//
+//        return ResultUtils.success(tempCti.getId());
+//    }
+//
+//    @GetMapping("/test/cti/add")
+//    public BaseResponse<Long> addTestCti(HttpServletRequest request) {
+//        List<Cti> list1 = ctiService.list();
+//        for (Cti cti : list1) {
+//            List<CtiChunk> list = ctiChunkService.list(new LambdaQueryWrapper<CtiChunk>().eq(CtiChunk::getCtiId, cti.getId()));
+//            if (list.isEmpty()){
+//                Cti tempCti = ctiService.getById(cti.getId());// 模拟id
+//                CtiEntityExtractRequest ctiEntityExtractRequest = new CtiEntityExtractRequest();
+//                ctiEntityExtractRequest.setContent(tempCti.getContent());
+//                ctiEntityExtractRequest.setCtiId(tempCti.getId());
+//                // 调用异步方法
+//                CompletableFuture.runAsync(() -> {
+//                    aiServer.getCtiEntityAndGraph(ctiEntityExtractRequest);
+//                });
+//            }
+//        }
 
-        // 添加一个cti的ttp初始信息，随后我
-        // 先进行判定，看看数据库中是否存在这个对象，要是存在直接报错
-        int ctiTtpInDbCount = ctiTtpsService.list(new LambdaQueryWrapper<CtiTtps>().eq(CtiTtps::getCtiId, tempCti.getId())).size();
-        ThrowUtils.throwIf(ctiTtpInDbCount > 0, ErrorCode.PARAMS_ERROR);
+//        List<Cti> list1 = ctiService.list(new LambdaUpdateWrapper<Cti>().orderByDesc(Cti::getCreateTime));
+//        for (Cti cti : list1.subList(31, list1.size()-1)) {
+//            CtiTtps ctiTtps = new CtiTtps();
+//            ctiTtps.setCtiId(cti.getId());
+//            ctiTtps.setStatus(TtpStatusEnum.PROCESSING.getValue()); // 更新初始化的状态，更改为正在处理中
+//
+//            ctiTtpsService.save(ctiTtps);
+//            // 调用异步方法
+//            // 该请求没有返回值，ai服务处理好之后会调用后端add ttp
+//            // 要是这里请求出现错误，那么就更新状态为需要后续进行重试，或者用户手动进行重试请求。
+//            CtiTtpExtractVo ctiTtpExtractVo = CtiTtpExtractVo.builder().content(cti.getContent()).ctiId(cti.getId()).build();
+//            AiServerRet aiServerRet = aiServer.getCtiContentTtp(ctiTtpExtractVo);
+//            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()) {
+//                ctiTtps.setStatus(TtpStatusEnum.Retrying.getValue());
+//                ctiTtpsService.updateById(ctiTtps);
+//            }
+//        }
+//        return ResultUtils.success(11L);
+//    }
 
-        CtiTtps ctiTtps = new CtiTtps();
-        ctiTtps.setCtiId(tempCti.getId());
-        ctiTtps.setStatus(TtpStatusEnum.PROCESSING.getValue()); // 更新初始化的状态，更改为正在处理中
-
-        ctiTtpsService.save(ctiTtps);
-        // 调用异步方法
-        CompletableFuture.runAsync(() -> {
-            // 该请求没有返回值，ai服务处理好之后会调用后端add ttp
-            // 要是这里请求出现错误，那么就更新状态为需要后续进行重试，或者用户手动进行重试请求。
-            CtiTtpExtractVo ctiTtpExtractVo = CtiTtpExtractVo.builder().content(tempCti.getContent()).ctiId(tempCti.getId()).build();
-            AiServerRet aiServerRet = aiServer.getCtiContentTtp(ctiTtpExtractVo);
-            if (aiServerRet.getCode() != ErrorCode.SUCCESS.getCode()){
-                ctiTtps.setStatus(TtpStatusEnum.Retrying.getValue());
-                ctiTtpsService.updateById(ctiTtps);
-            }
-        });
-
-        return ResultUtils.success(tempCti.getId());
-    }
+//    @GetMapping("/test/cti/abstract")
+//    public BaseResponse<Long> addAbstractCti(HttpServletRequest request) {
+//        List<Cti> list1 = ctiService.list(new LambdaQueryWrapper<Cti>().orderByDesc(Cti::getUpdateTime));
+//        for (Cti cti : list1) {
+//            if (StringUtils.isBlank(cti.getAbstractText())) {
+//                CtiAbstractRequest ctiAbstractRequest = new CtiAbstractRequest();
+//                ctiAbstractRequest.setContent(cti.getContent());
+//                AiServerRet ctiAbstract = aiServer.getCtiAbstract(ctiAbstractRequest);
+//                String data = ctiAbstract.getData();
+//                System.out.println(">>>>>>>>>>>>>>>" + " " + data);
+//                cti.setAbstractText(data);
+//                ctiService.updateById(cti);
+//            }
+//        }
+//        return ResultUtils.success(11L);
+//    }
 
 
     @PostMapping("/delete")
@@ -233,7 +296,8 @@ public class CtiController {
         CtiWordLabelVo ctiWordLabelVo = new CtiWordLabelVo();
 
         Gson gson = new Gson();
-        Type type = new TypeToken<List<List<String>>>() {}.getType();
+        Type type = new TypeToken<List<List<String>>>() {
+        }.getType();
         List<List<String>> wordList = gson.fromJson(cti.getWordList(), type);
         List<List<String>> labelList = gson.fromJson(cti.getLabelList(), type);
 
@@ -282,7 +346,7 @@ public class CtiController {
         // 获取创建该情报的用户
         Long userId = cti.getUserId();
         User user = userService.getById(userId);
-        ThrowUtils.throwIf(ObjectUtils.isEmpty(user), ErrorCode.NOT_FOUND_ERROR);
+        ThrowUtils.throwIf(ObjectUtils.isEmpty(user), ErrorCode.NOT_FOUND_ERROR, "非法情报来源");
         NoRoleUserVo noRoleUserVo = new NoRoleUserVo();
         BeanUtils.copyProperties(user, noRoleUserVo);
         ctiDetailVo.setUser(noRoleUserVo);

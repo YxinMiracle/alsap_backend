@@ -37,7 +37,6 @@ public class ItemHomeVo implements Serializable {
     private Integer itemDbCount;
 
 
-
     /**
      * 对itemType的一个解释
      */

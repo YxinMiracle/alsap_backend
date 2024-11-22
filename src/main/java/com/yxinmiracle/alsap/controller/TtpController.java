@@ -6,10 +6,7 @@ package com.yxinmiracle.alsap.controller;
  * @Gitee: https://gitee.com/yxinmiracle
  */
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.utils.IOUtils;
 import com.yxinmiracle.alsap.annotation.DecryptRequestBody;
@@ -17,14 +14,9 @@ import com.yxinmiracle.alsap.common.BaseResponse;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.common.ResultUtils;
 import com.yxinmiracle.alsap.exception.BusinessException;
-import com.yxinmiracle.alsap.exception.ThrowUtils;
 import com.yxinmiracle.alsap.manager.CosManager;
-import com.yxinmiracle.alsap.model.dto.cti.CtiQueryRequest;
 import com.yxinmiracle.alsap.model.dto.ttp.TtpQueryRequest;
-import com.yxinmiracle.alsap.model.entity.Cti;
 import com.yxinmiracle.alsap.model.entity.CtiTtps;
-import com.yxinmiracle.alsap.model.entity.Item;
-import com.yxinmiracle.alsap.model.vo.cti.CtiVo;
 import com.yxinmiracle.alsap.service.CtiTtpsService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Map;
 
 /**
  * 情报ttp接口

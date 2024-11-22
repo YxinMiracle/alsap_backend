@@ -10,30 +10,20 @@ import com.yxinmiracle.alsap.common.ResultUtils;
 import com.yxinmiracle.alsap.constant.UserConstant;
 import com.yxinmiracle.alsap.exception.BusinessException;
 import com.yxinmiracle.alsap.exception.ThrowUtils;
-import com.yxinmiracle.alsap.model.dto.user.UserAddRequest;
-import com.yxinmiracle.alsap.model.dto.user.UserLoginRequest;
-import com.yxinmiracle.alsap.model.dto.user.UserQueryRequest;
-import com.yxinmiracle.alsap.model.dto.user.UserRegisterRequest;
-import com.yxinmiracle.alsap.model.dto.user.UserUpdateMyRequest;
-import com.yxinmiracle.alsap.model.dto.user.UserUpdateRequest;
+import com.yxinmiracle.alsap.model.dto.user.*;
 import com.yxinmiracle.alsap.model.entity.User;
 import com.yxinmiracle.alsap.model.vo.LoginUserVO;
 import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import com.yxinmiracle.alsap.service.UserService;
-
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import static com.yxinmiracle.alsap.service.impl.UserServiceImpl.SALT;
 

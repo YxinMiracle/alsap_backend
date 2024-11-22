@@ -1,18 +1,19 @@
 package com.yxinmiracle.alsap.model.enums;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * 文件上传业务类型枚举
- *
-
  */
 public enum FileUploadBizEnum {
 
     USER_AVATAR("用户头像", "user_avatar"),
+    YARA_RULE("Yara规则", "yara"),
+    SNORT_RULE("Snort规则", "snort"),
     TECHNIQUE_CONFIG_FILE("TTP配置文件", "tpp_config");
 
     private final String text;

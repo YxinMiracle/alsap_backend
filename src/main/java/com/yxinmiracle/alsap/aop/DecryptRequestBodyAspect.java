@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.exception.BusinessException;
 import com.yxinmiracle.alsap.utils.CryptoUtils;
-import com.yxinmiracle.alsap.utils.HttpHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,7 +16,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

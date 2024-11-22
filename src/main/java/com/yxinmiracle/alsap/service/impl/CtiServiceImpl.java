@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yxinmiracle.alsap.mapper.CtiChunkMapper;
 import com.yxinmiracle.alsap.mapper.CtiMapper;
 import com.yxinmiracle.alsap.mapper.RelationMapper;
+import com.yxinmiracle.alsap.model.dto.graph.CtiNodeRelCtiQueryRequest;
 import com.yxinmiracle.alsap.model.dto.cti.CtiQueryRequest;
 import com.yxinmiracle.alsap.model.dto.cti.PreventEntityQuery;
 import com.yxinmiracle.alsap.model.entity.Cti;
@@ -15,10 +16,10 @@ import com.yxinmiracle.alsap.model.entity.CtiChunk;
 import com.yxinmiracle.alsap.model.entity.Item;
 import com.yxinmiracle.alsap.model.entity.Relation;
 import com.yxinmiracle.alsap.model.enums.ItemTypeEnum;
-import com.yxinmiracle.alsap.model.vo.PostVO;
 import com.yxinmiracle.alsap.model.vo.cti.CtiVo;
+import com.yxinmiracle.alsap.model.vo.graph.GraphVo;
+import com.yxinmiracle.alsap.model.vo.graph.NodeRelCtiVo;
 import com.yxinmiracle.alsap.service.CtiService;
-import com.yxinmiracle.alsap.service.ItemService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +27,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -139,6 +143,19 @@ public class CtiServiceImpl extends ServiceImpl<CtiMapper, Cti>
             return ctiVo;
         }).collect(Collectors.toList());
         return ctiVoList;
+    }
+
+    @Override
+    public List<GraphVo> getGraphDataByCtiId(Long ctiId) {
+        List<GraphVo> graphDataByCtiId = ctiMapper.getGraphDataByCtiId(ctiId);
+        return graphDataByCtiId;
+    }
+
+    @Override
+    public List<CtiVo> getNodeRelCtiData(CtiNodeRelCtiQueryRequest ctiNodeRelCtiQueryRequest) {
+        // 修改后
+        List<CtiVo> results = ctiMapper.getNodeRelCtiData(ctiNodeRelCtiQueryRequest); // 确保返回类型是List<CtiVo>
+        return results;
     }
 
 }

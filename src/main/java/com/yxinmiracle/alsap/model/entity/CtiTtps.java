@@ -4,19 +4,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
- * 
  * @TableName cti_ttps
  */
-@TableName(value ="cti_ttps")
+@TableName(value = "cti_ttps")
 @Data
 public class CtiTtps implements Serializable {
     /**
@@ -41,11 +37,10 @@ public class CtiTtps implements Serializable {
     private String articleLevelTtp;
 
     /**
-     *
-     1. 0表示默认，没有开始，也没有失败
-     2. 1表示已经调用了ai服务，但是还没有后端服务还有没有返回数据
-     3. 2表示后端服务已经成功返回数据了，任务完成
-     3. 3表示已经调用了ai服务，但是ai服务并没有正确返回对应的数据，现在需要调用定时服务去重新执行。
+     * 1. 0表示默认，没有开始，也没有失败
+     * 2. 1表示已经调用了ai服务，但是还没有后端服务还有没有返回数据
+     * 3. 2表示后端服务已经成功返回数据了，任务完成
+     * 3. 3表示已经调用了ai服务，但是ai服务并没有正确返回对应的数据，现在需要调用定时服务去重新执行。
      */
     private Integer status;
 

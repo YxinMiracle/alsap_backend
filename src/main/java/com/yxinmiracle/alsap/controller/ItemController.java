@@ -1,9 +1,6 @@
 package com.yxinmiracle.alsap.controller;
 
-import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yxinmiracle.alsap.aiService.AiServer;
 import com.yxinmiracle.alsap.annotation.AuthCheck;
 import com.yxinmiracle.alsap.annotation.DecryptRequestBody;
 import com.yxinmiracle.alsap.common.BaseResponse;
@@ -15,12 +12,9 @@ import com.yxinmiracle.alsap.exception.ThrowUtils;
 import com.yxinmiracle.alsap.model.dto.item.ItemDeleteRequest;
 import com.yxinmiracle.alsap.model.dto.item.ItemQueryRequest;
 import com.yxinmiracle.alsap.model.dto.item.ItemUpdateRequest;
-import com.yxinmiracle.alsap.model.dto.post.PostUpdateRequest;
-import com.yxinmiracle.alsap.model.entity.Relation;
-import com.yxinmiracle.alsap.model.entity.*;
-import com.yxinmiracle.alsap.model.model.ModelResult;
+import com.yxinmiracle.alsap.model.entity.Item;
 import com.yxinmiracle.alsap.model.vo.item.ItemVo;
-import com.yxinmiracle.alsap.service.*;
+import com.yxinmiracle.alsap.service.ItemService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -30,9 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 帖子接口
@@ -88,6 +80,7 @@ public class ItemController {
     /**
      * 更新item（仅管理员）
      * 前端利用组件级别的控制
+     *
      * @param itemUpdateRequest
      * @return
      */
@@ -127,4 +120,6 @@ public class ItemController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(item.getId());
     }
+
+
 }

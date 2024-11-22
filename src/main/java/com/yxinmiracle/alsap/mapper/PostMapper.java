@@ -2,13 +2,12 @@ package com.yxinmiracle.alsap.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yxinmiracle.alsap.model.entity.Post;
+
 import java.util.Date;
 import java.util.List;
 
 /**
  * 帖子数据库操作
- *
-
  */
 public interface PostMapper extends BaseMapper<Post> {
 

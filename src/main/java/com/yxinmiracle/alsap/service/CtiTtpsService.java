@@ -1,7 +1,7 @@
 package com.yxinmiracle.alsap.service;
 
-import com.yxinmiracle.alsap.model.entity.CtiTtps;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yxinmiracle.alsap.model.entity.CtiTtps;
 
 /**
  *

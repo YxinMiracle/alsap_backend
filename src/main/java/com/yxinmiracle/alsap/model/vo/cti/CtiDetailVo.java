@@ -8,7 +8,6 @@ package com.yxinmiracle.alsap.model.vo.cti;
 
 import com.yxinmiracle.alsap.model.entity.CtiChunk;
 import com.yxinmiracle.alsap.model.vo.user.NoRoleUserVo;
-import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -48,6 +47,12 @@ public class CtiDetailVo {
 
     @ApiModelProperty("创建该情报的User")
     private NoRoleUserVo user;
+
+    @ApiModelProperty("cti情报html内容")
+    private String htmlText;
+
+    @ApiModelProperty("cti情报摘要")
+    private String abstractText;
 
     /**
      * 创建时间

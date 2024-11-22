@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RelationServiceImpl extends ServiceImpl<RelationMapper, Relation>
-    implements RelationService{
+        implements RelationService {
 
 }
 

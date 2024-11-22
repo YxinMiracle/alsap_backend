@@ -6,14 +6,13 @@ import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.yxinmiracle.alsap.config.CosClientConfig;
-import java.io.File;
-import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.io.File;
 
 /**
  * Cos 对象存储操作
- *
-
  */
 @Component
 public class CosManager {
@@ -27,7 +26,7 @@ public class CosManager {
     /**
      * 上传对象
      *
-     * @param key 唯一键
+     * @param key           唯一键
      * @param localFilePath 本地文件路径
      * @return
      */
@@ -40,7 +39,7 @@ public class CosManager {
     /**
      * 上传对象
      *
-     * @param key 唯一键
+     * @param key  唯一键
      * @param file 文件
      * @return
      */
@@ -53,10 +52,11 @@ public class CosManager {
 
     /**
      * 下载文件
+     *
      * @param key 这个是这个文件在存储桶中的一个位置
      * @return
      */
-    public COSObject getObj(String key){
+    public COSObject getObj(String key) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(cosClientConfig.getBucket(), key);
         COSObject cosObject = cosClient.getObject(getObjectRequest);
         return cosObject;

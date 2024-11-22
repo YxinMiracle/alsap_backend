@@ -2,8 +2,6 @@ package com.yxinmiracle.alsap.common;
 
 /**
  * 返回工具类
- *
-
  */
 public class ResultUtils {
 

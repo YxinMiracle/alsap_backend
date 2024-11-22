@@ -1,0 +1,66 @@
+kind: pipeline
+type: docker
+name: yxinmiracle-alsap
+
+volumes:
+  - name: maven_cache
+    host:
+      path: /home/drone/cache/maven
+  - name: run_script
+    host:
+      path: /www/wwwroot/cyx_alsap
+
+steps:
+  - name: 编译文件
+    image: maven:3.8.1-openjdk-17
+    pull: if-not-exists
+    volumes:
+      - name: maven_cache
+        path: /root/.m2
+      - name: run_script
+        path: /app/build
+    command:
+      - cp /app/build/application-prod.yml src/main/resources/application-prod.yml
+      - mvn clean package -Dmaven.test.skip=true
+      - cp target/alsap_backend-0.0.1-SNAPSHOT.jar /app/build/alsap_backend-0.0.1-SNAPSHOT.jar
+      - cp Dockerfile /app/build/Dockerfile
+      - cp run.sh /app/build/run.sh
+
+  # 2.使用ssh访问主机制作镜像并运行
+  - name: ssh commands
+    pull: if-not-exists
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        # 从drone仓库配置中秘密空间读取服务器IP
+        from_secret: ssh_host
+      username:
+        # 从drone仓库配置中秘密空间读取用户
+        from_secret: ssh_user
+      password:
+        # 从drone仓库配置中秘密空间读取密码
+        from_secret: ssh_password
+      port: 22
+      script:
+        - cd /www/wwwroot/cyx_alsap
+        - chmod +x run.sh
+        - ./run.sh
+
+  - name: 构建通知
+    iamge: plugins/webhook
+    pull: if-not-exists
+    settings:
+      url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dbeff4aa-f45d-4c04-9408-2b3896e3b66d
+      content_type: application/json
+      template: |
+        {
+          "magtype": "markdown",
+          "markdown": {
+            "content": "我又部署项目了"
+          }
+        }
+
+# drone执行触发器
+trigger:
+  branch:
+    - master

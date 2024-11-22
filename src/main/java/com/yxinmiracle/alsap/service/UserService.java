@@ -6,14 +6,13 @@ import com.yxinmiracle.alsap.model.dto.user.UserQueryRequest;
 import com.yxinmiracle.alsap.model.entity.User;
 import com.yxinmiracle.alsap.model.vo.LoginUserVO;
 import com.yxinmiracle.alsap.model.vo.user.UserVO;
-import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
  * 用户服务
- *
-
  */
 public interface UserService extends IService<User> {
 

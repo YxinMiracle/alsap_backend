@@ -4,7 +4,6 @@ import com.yxinmiracle.alsap.common.ErrorCode;
 
 /**
  * 抛异常工具类
- *
  */
 public class ThrowUtils {
 

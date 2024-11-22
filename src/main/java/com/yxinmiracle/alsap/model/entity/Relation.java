@@ -11,9 +11,10 @@ import java.util.Date;
 
 /**
  * 实体表
+ *
  * @TableName relation
  */
-@TableName(value ="relation")
+@TableName(value = "relation")
 @Data
 public class Relation implements Serializable {
     /**
@@ -59,7 +60,6 @@ public class Relation implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
 
 
     @Override

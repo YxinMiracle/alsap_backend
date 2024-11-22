@@ -2,8 +2,6 @@ package com.yxinmiracle.alsap.constant;
 
 /**
  * 用户常量
- *
-
  */
 public interface UserConstant {
 

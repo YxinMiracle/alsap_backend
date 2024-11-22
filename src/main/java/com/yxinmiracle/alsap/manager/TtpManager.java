@@ -9,10 +9,8 @@ package com.yxinmiracle.alsap.manager;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.yxinmiracle.alsap.common.ErrorCode;
-import com.yxinmiracle.alsap.common.ResultUtils;
 import com.yxinmiracle.alsap.exception.BusinessException;
 import com.yxinmiracle.alsap.model.enums.FileUploadBizEnum;
 import com.yxinmiracle.alsap.model.meta.TtpMeta;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.List;
-import java.util.Random;
 
 @Component
 @Slf4j

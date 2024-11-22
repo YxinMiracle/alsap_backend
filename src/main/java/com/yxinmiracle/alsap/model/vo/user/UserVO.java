@@ -1,13 +1,12 @@
 package com.yxinmiracle.alsap.model.vo.user;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 用户视图（脱敏）
- *
-
  */
 @Data
 public class UserVO implements Serializable {

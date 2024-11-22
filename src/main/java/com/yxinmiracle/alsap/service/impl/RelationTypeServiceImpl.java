@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  *
@@ -80,7 +79,7 @@ public class RelationTypeServiceImpl extends ServiceImpl<RelationTypeMapper, Rel
 
         Set<String> relationTypeNameSet = relationTypeMapper.selectList(null).stream().map(RelationType::getRelationName).collect(Collectors.toSet());
 
-        if (!relationTypeNameSet.contains(relationType.getRelationName())){
+        if (!relationTypeNameSet.contains(relationType.getRelationName())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "更新的关系并不属于系统");
         }
     }

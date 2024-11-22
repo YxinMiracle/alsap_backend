@@ -19,6 +19,7 @@ public class CryptoUtils {
 
     /**
      * 解密使用DES加密的Base64编码字符串
+     *
      * @param encryptedData 加密后的文本，Base64编码的字符串
      * @return 解密后的字符串
      * @throws Exception 可能抛出的异常，如密钥错误、算法错误等
@@ -65,6 +66,7 @@ public class CryptoUtils {
 
     /**
      * 解析内部请求是否合法
+     *
      * @param signature
      * @return
      */
@@ -82,7 +84,6 @@ public class CryptoUtils {
         long currentTimestamp = System.currentTimeMillis();
         return Math.abs(currentTimestamp - requestTimestamp) <= TIME_THRESHOLD;
     }
-
 
 
     public static void main(String[] args) {

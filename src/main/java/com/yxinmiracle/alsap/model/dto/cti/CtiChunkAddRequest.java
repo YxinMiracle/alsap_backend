@@ -8,10 +8,11 @@ package com.yxinmiracle.alsap.model.dto.cti;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class CtiChunkAddRequest {
+public class CtiChunkAddRequest implements Serializable {
 
     List<CtiChunkDto> ctiChunkData;
 

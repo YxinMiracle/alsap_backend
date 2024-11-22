@@ -1,8 +1,6 @@
 package com.yxinmiracle.alsap.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yxinmiracle.alsap.model.dto.item.ItemQueryRequest;
@@ -23,6 +21,7 @@ public interface ItemService extends IService<Item> {
 
     /**
      * 根据ItemType，也就是属于SCO还是属于SDO类型的实体，然后根据这itemType去获取信息
+     *
      * @param itemType
      * @return
      */

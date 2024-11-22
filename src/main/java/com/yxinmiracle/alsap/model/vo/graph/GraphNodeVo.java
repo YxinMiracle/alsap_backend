@@ -27,8 +27,6 @@ public class GraphNodeVo {
 
     private Date updateTime;
 
-    private List<CtiVo> relatedCti;
-
     /**
      * 这个实体对应的CTI文章是什么
      */

@@ -2,18 +2,16 @@ package com.yxinmiracle.alsap.model.vo;
 
 import cn.hutool.json.JSONUtil;
 import com.yxinmiracle.alsap.model.entity.Post;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
 import com.yxinmiracle.alsap.model.vo.user.UserVO;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
 /**
  * 帖子视图
- *
-
  */
 @Data
 public class PostVO implements Serializable {

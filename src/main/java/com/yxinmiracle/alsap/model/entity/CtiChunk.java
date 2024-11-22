@@ -11,9 +11,10 @@ import java.util.Date;
 
 /**
  * cti提交表
+ *
  * @TableName cti_chunk
  */
-@TableName(value ="cti_chunk")
+@TableName(value = "cti_chunk")
 @Data
 public class CtiChunk implements Serializable {
     /**
@@ -83,15 +84,15 @@ public class CtiChunk implements Serializable {
         }
         CtiChunk other = (CtiChunk) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getCtiId() == null ? other.getCtiId() == null : this.getCtiId().equals(other.getCtiId()))
-            && (this.getItemId() == null ? other.getItemId() == null : this.getItemId().equals(other.getItemId()))
-            && (this.getSentText() == null ? other.getSentText() == null : this.getSentText().equals(other.getSentText()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getStartOffset() == null ? other.getStartOffset() == null : this.getStartOffset().equals(other.getStartOffset()))
-            && (this.getEndOffset() == null ? other.getEndOffset() == null : this.getEndOffset().equals(other.getEndOffset()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
-            && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
+                && (this.getCtiId() == null ? other.getCtiId() == null : this.getCtiId().equals(other.getCtiId()))
+                && (this.getItemId() == null ? other.getItemId() == null : this.getItemId().equals(other.getItemId()))
+                && (this.getSentText() == null ? other.getSentText() == null : this.getSentText().equals(other.getSentText()))
+                && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
+                && (this.getStartOffset() == null ? other.getStartOffset() == null : this.getStartOffset().equals(other.getStartOffset()))
+                && (this.getEndOffset() == null ? other.getEndOffset() == null : this.getEndOffset().equals(other.getEndOffset()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()))
+                && (this.getIsDelete() == null ? other.getIsDelete() == null : this.getIsDelete().equals(other.getIsDelete()));
     }
 
     @Override

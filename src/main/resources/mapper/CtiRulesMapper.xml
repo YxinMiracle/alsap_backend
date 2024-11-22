@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxinmiracle.alsap.mapper.CtiRulesMapper">
+
+    <resultMap id="BaseResultMap" type="com.yxinmiracle.alsap.model.entity.CtiRules">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="ctiId" column="ctiId" jdbcType="BIGINT"/>
+            <result property="llmResult" column="llmResult" jdbcType="VARCHAR"/>
+            <result property="llmStatus" column="llmStatus" jdbcType="INTEGER"/>
+            <result property="ruleFileStatus" column="ruleFileStatus" jdbcType="INTEGER"/>
+            <result property="ruleType" column="ruleType" jdbcType="INTEGER"/>
+            <result property="filePath" column="filePath" jdbcType="VARCHAR"/>
+            <result property="ruleName" column="ruleName" jdbcType="VARCHAR"/>
+            <result property="singleRequestId" column="singleRequestId" jdbcType="VARCHAR"/>
+            <result property="ruleDescription" column="ruleDescription" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,ctiId,llmResult,
+        llmStatus,ruleFileStatus,ruleType,
+        filePath,createTime,updateTime,
+        isDelete
+    </sql>
+</mapper>

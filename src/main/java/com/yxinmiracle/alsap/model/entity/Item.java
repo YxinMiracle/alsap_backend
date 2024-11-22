@@ -11,9 +11,10 @@ import java.util.Date;
 
 /**
  * 实体信息表
+ *
  * @TableName item
  */
-@TableName(value ="item")
+@TableName(value = "item")
 @Data
 public class Item implements Serializable {
     /**

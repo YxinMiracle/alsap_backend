@@ -38,6 +38,19 @@ public class RequestUtils {
         return response;
     }
 
+    /**
+     * GET请求
+     */
+    public static HttpResponse getWithNoHeader(String url) {
+        Long currentTime = System.currentTimeMillis();
+        log.info("[RequestUtils.get  request...] in: currentTime={}, url={}", currentTime, url);
+        HttpResponse response = HttpRequest
+                .get(url)
+                .timeout(TIME_OUT_MILLISECONDS)
+                .execute();
+        return response;
+    }
+
 
     public static <T> T post(String url, String postBody, Map<String, String> headerMap, Class<T> responseClassType) {
         Long currentTime = System.currentTimeMillis();

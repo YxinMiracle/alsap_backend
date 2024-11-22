@@ -7,7 +7,6 @@ package com.yxinmiracle.alsap.common;
  */
 
 import lombok.Data;
-import org.apache.poi.ss.formula.functions.T;
 
 @Data
 public class AiServerRet {

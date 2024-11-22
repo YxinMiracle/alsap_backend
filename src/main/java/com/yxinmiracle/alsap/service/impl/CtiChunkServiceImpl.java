@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CtiChunkServiceImpl extends ServiceImpl<CtiChunkMapper, CtiChunk>
-    implements CtiChunkService{
+        implements CtiChunkService {
 
 }
 
