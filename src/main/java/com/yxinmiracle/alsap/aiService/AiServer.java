@@ -78,7 +78,7 @@ public class AiServer {
 
 
     /**
-     * 输入的信息是Cti情报的内容
+     * 输入的信息是Cti情报的内容test
      *
      * @param ctiContent
      * @return 通过调用Ai服务获取抽取出的cti情报实体的结果
