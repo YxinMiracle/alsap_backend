@@ -199,7 +199,7 @@
             c1.id != #{ctiId}
     </select>
 
-
+    <!--得到规则数量和关系数量-->
     <select id="getRelationAndRuleCountByCtiId" resultType="com.yxinmiracle.alsap.model.db.CtiRelationRuleCount" parameterType="java.util.List">
         SELECT
             c1.id AS ctiId,
