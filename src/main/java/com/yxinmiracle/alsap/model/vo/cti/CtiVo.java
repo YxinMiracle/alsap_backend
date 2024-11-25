@@ -30,6 +30,12 @@ public class CtiVo {
 
     private Integer hasGraph; // 可观测对象数量
 
+    private Integer hasRule;
+
+    private String postUrl;
+
+    private Integer ctiCharCount; // 存储文章字符数量，用于前端计算对应的阅读时间
+
     /**
      * 创建时间
      */

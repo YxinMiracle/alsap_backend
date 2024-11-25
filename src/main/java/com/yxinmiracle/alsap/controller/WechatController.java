@@ -52,11 +52,12 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class WechatController {
 
-    private String appid = "wx63aa40f439618ce7";
-    private String secret = "fca0e31a8f9fe8e63ff1b84ff1523c7c";
+    private String appid = "";
+    private String secret = "";
     private String accessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
     private String jsapiTicketUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi";
+
     /**
      * 获取access_token
      *

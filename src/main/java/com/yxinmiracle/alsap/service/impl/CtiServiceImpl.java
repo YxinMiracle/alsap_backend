@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yxinmiracle.alsap.mapper.CtiChunkMapper;
 import com.yxinmiracle.alsap.mapper.CtiMapper;
 import com.yxinmiracle.alsap.mapper.RelationMapper;
+import com.yxinmiracle.alsap.model.db.CtiRelationRuleCount;
 import com.yxinmiracle.alsap.model.dto.graph.CtiNodeRelCtiQueryRequest;
 import com.yxinmiracle.alsap.model.dto.cti.CtiQueryRequest;
 import com.yxinmiracle.alsap.model.dto.cti.PreventEntityQuery;
@@ -109,12 +110,19 @@ public class CtiServiceImpl extends ServiceImpl<CtiMapper, Cti>
         if (CollUtil.isEmpty(ctiPage.getRecords())) {
             return CtiVoPage;
         }
+        List<Long> ctiIdList = ctiPage.getRecords().stream().map(Cti::getId).collect(Collectors.toList());
+        List<CtiRelationRuleCount> ctiRelationRuleCounts = ctiMapper.getRelationAndRuleCountByCtiId(ctiIdList);
+        Map<Long, CtiRelationRuleCount> ctiRelationRuleCountMap = ctiRelationRuleCounts.stream()
+                .collect(Collectors.toMap(CtiRelationRuleCount::getCtiId, c -> c));
+
 
         List<CtiVo> ctiVoList = ctiPage.getRecords().stream().map(cti -> {
             CtiVo ctiVo = new CtiVo();
             BeanUtils.copyProperties(cti, ctiVo);
-            ctiVo.setHasGraph(relationMapper.selectCount(new LambdaQueryWrapper<Relation>().eq(Relation::getCtiId, cti.getId())) > 0 ? 1 : 0);
-
+            ctiVo.setHasGraph(ctiRelationRuleCountMap.get(cti.getId()).getRelationCount()>0?1:0);
+            ctiVo.setHasRule(ctiRelationRuleCountMap.get(cti.getId()).getCtiRuleCount()>0?1:0);
+            ctiVo.setPostUrl(cti.getPostUrl());
+            ctiVo.setCtiCharCount(cti.getContent().length());
             CtiVo scoAndSdoCountByCtiId = getScoAndSdoCountByCtiId(cti.getId(), itemId2ItemMap);
             Integer scoNum = scoAndSdoCountByCtiId.getScoNum();
             Integer sdoNum = scoAndSdoCountByCtiId.getSdoNum();

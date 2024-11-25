@@ -199,4 +199,27 @@
             c1.id != #{ctiId}
     </select>
 
+
+    <select id="getRelationAndRuleCountByCtiId" resultType="com.yxinmiracle.alsap.model.db.CtiRelationRuleCount" parameterType="java.util.List">
+        SELECT
+            c1.id AS ctiId,
+            COALESCE(COUNT(DISTINCT r1.id), 0) AS relationCount,
+            COALESCE(COUNT(DISTINCT cr1.id), 0) AS ctiRuleCount
+        FROM
+            cti AS c1
+                LEFT JOIN
+            relation AS r1 ON c1.id = r1.ctiId AND r1.isDelete = 0
+                LEFT JOIN
+            cti_rules AS cr1 ON c1.id = cr1.ctiId AND cr1.isDelete = 0  AND cr1.llmResult = 3 AND cr1.ruleFileStatus = 2  -- 确保cti_rules记录未删除
+        WHERE
+            c1.isDelete = 0
+          AND c1.id IN
+              <foreach collection="ctiIdList" item="ctiId" open="(" close=")" separator=",">
+                #{ctiId}
+              </foreach>
+        GROUP BY
+            c1.id;
+
+    </select>
+
 </mapper>
