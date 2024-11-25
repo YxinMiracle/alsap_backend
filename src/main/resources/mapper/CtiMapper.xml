@@ -210,7 +210,7 @@
                 LEFT JOIN
             relation AS r1 ON c1.id = r1.ctiId AND r1.isDelete = 0
                 LEFT JOIN
-            cti_rules AS cr1 ON c1.id = cr1.ctiId AND cr1.isDelete = 0  AND cr1.llmResult = 3 AND cr1.ruleFileStatus = 2  -- 确保cti_rules记录未删除
+            cti_rules AS cr1 ON c1.id = cr1.ctiId AND cr1.isDelete = 0  AND cr1.llmStatus = 3 AND cr1.ruleFileStatus = 2  -- 确保cti_rules记录未删除
         WHERE
             c1.isDelete = 0
           AND c1.id IN
