@@ -56,6 +56,7 @@ public class WechatController {
     @Value("${open.appId}")
     private String appid;
 
+    
     @Value("${open.appSecret}")
     private String secret;
 
