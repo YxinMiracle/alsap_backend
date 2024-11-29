@@ -53,18 +53,15 @@ public class IpFlowLimitAspect {
     }
 
 
-    @Around("@annotation(ipFlowLimit)")  // 方法执行前执行限流规则配置
+    @Around("@annotation(ipFlowLimit)") 
     public Object handleIpFlowLimit(ProceedingJoinPoint joinPoint, IpFlowLimit ipFlowLimit) throws Exception {
-        String resourceName = ipFlowLimit.resourceName();  // 获取注解中的资源名
+        String resourceName = ipFlowLimit.resourceName();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         // 获取 IP 地址
         String remoteAddr = request.getRemoteAddr();
 
-        // 判断当前类是否已经处理过，如果没有处理过，则创建限流规则
         if (!processedMethods.contains(resourceName)) {
-            // 如果是第一次遇到该类名，创建限流规则
             createAndLoadFlowRules(ipFlowLimit, resourceName);
-            // 将类名添加到已处理集合中，防止重复加载
             processedMethods.add(resourceName);
         }
 
