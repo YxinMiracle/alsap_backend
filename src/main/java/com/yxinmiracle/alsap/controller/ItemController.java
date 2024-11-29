@@ -3,6 +3,7 @@ package com.yxinmiracle.alsap.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yxinmiracle.alsap.annotation.AuthCheck;
 import com.yxinmiracle.alsap.annotation.DecryptRequestBody;
+import com.yxinmiracle.alsap.annotation.IpFlowLimit;
 import com.yxinmiracle.alsap.common.BaseResponse;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.common.ResultUtils;
@@ -50,6 +51,7 @@ public class ItemController {
     @PostMapping("/list/page")
     @ApiOperation(value = "根据Item查询信息返回ItemVo信息")
     @DecryptRequestBody
+    @IpFlowLimit(resourceName = "getItemByPage")
     public BaseResponse<Page<ItemVo>> getItemByPage(@RequestBody ItemQueryRequest itemQueryRequest, HttpServletRequest request) {
         // 获取当前页数以及对应的请求大小
         long current = itemQueryRequest.getCurrent();

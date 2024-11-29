@@ -1,5 +1,12 @@
 package com.yxinmiracle.alsap.controller;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.EntryType;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.Tracer;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.reflect.TypeToken;
@@ -7,6 +14,7 @@ import com.google.gson.Gson;
 import com.yxinmiracle.alsap.aiService.AiServer;
 import com.yxinmiracle.alsap.annotation.AuthCheck;
 import com.yxinmiracle.alsap.annotation.DecryptRequestBody;
+import com.yxinmiracle.alsap.annotation.IpFlowLimit;
 import com.yxinmiracle.alsap.common.AiServerRet;
 import com.yxinmiracle.alsap.common.BaseResponse;
 import com.yxinmiracle.alsap.common.ErrorCode;
@@ -88,10 +96,49 @@ public class CtiController {
      * @param request
      * @return
      */
+//    @PostMapping("/list/page")
+//    @ApiOperation(value = "根据Cti查询信息返回CtiVo信息")
+//    @DecryptRequestBody
+//    @SentinelResource(value = "getCtiByPage",
+//            blockHandler = "handleBlockException",
+//            fallback = "handleFallback"
+//    )
+//    public BaseResponse<Page<CtiVo>> getCtiByPage(@RequestBody CtiQueryRequest ctiQueryRequest, HttpServletRequest request) {
+//
+//        // 获取当前页数以及对应的请求大小
+//        long current = ctiQueryRequest.getCurrent();
+//        long size = ctiQueryRequest.getPageSize();
+//        // 限制爬虫
+//        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
+//
+//        // 先进行分页查询，找到分页后的cti信息
+//        Page<Cti> ctiPage = ctiService.page(new Page<>(current, size), ctiService.getQueryWrapper(ctiQueryRequest));
+//
+//        // 获取item的信息
+//        Map<Long, Item> itemId2ItemMap = itemService.getItemId2ItemMap();
+//
+//        return ResultUtils.success(ctiService.getCtiVOPage(ctiPage, itemId2ItemMap, request));
+//    }
+
+    /**
+     * 根据请求参数来查询数据
+     * v1版本接口查询速度约为 811ms
+     * 24.11.23功能添加：
+     *    1. 首页不再以表格形式展现，使用卡片形式
+     *    2. 所以现在需要多返回些内容，返回的内容添加包括：图片的url，情报是否规则
+     *    3. 之前接口查询效率较低，现进行效率优化
+     * 24.11.29
+     *    1. 限流版
+     *
+     * @param ctiQueryRequest
+     * @param request
+     * @return
+     */
     @PostMapping("/list/page")
     @ApiOperation(value = "根据Cti查询信息返回CtiVo信息")
     @DecryptRequestBody
-    public BaseResponse<Page<CtiVo>> getCtiByPage(@RequestBody CtiQueryRequest ctiQueryRequest, HttpServletRequest request) {
+    @IpFlowLimit(resourceName = "getCtiByPageSentinel")
+    public BaseResponse<Page<CtiVo>> getCtiByPageSentinel(@RequestBody CtiQueryRequest ctiQueryRequest, HttpServletRequest request) {
 
         // 获取当前页数以及对应的请求大小
         long current = ctiQueryRequest.getCurrent();
@@ -101,12 +148,34 @@ public class CtiController {
 
         // 先进行分页查询，找到分页后的cti信息
         Page<Cti> ctiPage = ctiService.page(new Page<>(current, size), ctiService.getQueryWrapper(ctiQueryRequest));
-
         // 获取item的信息
         Map<Long, Item> itemId2ItemMap = itemService.getItemId2ItemMap();
-
         return ResultUtils.success(ctiService.getCtiVOPage(ctiPage, itemId2ItemMap, request));
     }
+
+
+    /**
+     * ctiQueryRequest 流控操作
+     * 限流：提示“系统压力过大，请耐心等待”
+     */
+    public BaseResponse<Page<CtiVo>> handleBlockException(@RequestBody CtiQueryRequest ctiQueryRequest,
+                                                                   HttpServletRequest request, BlockException ex) {
+        if (ex instanceof DegradeException) {
+            return handleFallback(ctiQueryRequest, request, ex);
+        }
+        // 限流操作
+        return ResultUtils.error(ErrorCode.HEIGHT_PRESSURE, "系统压力过大，请耐心等待");
+    }
+
+    /**
+     * ctiQueryRequest 降级操作：直接返回本地数据
+     */
+    public BaseResponse<Page<CtiVo>> handleFallback(@RequestBody CtiQueryRequest ctiQueryRequest,
+                                                    HttpServletRequest request, Throwable ex) {
+        // 可以返回本地数据或空数据
+        return ResultUtils.success(null);
+    }
+
 
     /**
      * 添加Cti情报接口

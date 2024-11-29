@@ -4,4 +4,4 @@ ADD alsap_backend-0.0.1-SNAPSHOT.jar /home/app.jar
 
 EXPOSE 8763
 
-CMD ["java", "-jar", "/home/app.jar","--spring.profiles.active=prod"]
+CMD ["java", "-Dcsp.sentinel.dashboard.server=localhost:8131", "-jar", "/home/app.jar", "--spring.profiles.active=prod"]

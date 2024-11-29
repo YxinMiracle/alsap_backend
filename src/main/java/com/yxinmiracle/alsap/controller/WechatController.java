@@ -73,18 +73,19 @@ public class WechatController {
     public BaseResponse<String> getTicket() {
         // 获得 accessToken
         String getAccessTokenUrl = String.format(accessTokenUrl, appid, secret);
+        System.out.println(">>>>>>>>>>>"+getAccessTokenUrl);
         HttpResponse httpResponse = RequestUtils.getWithNoHeader(getAccessTokenUrl);
         String access_token = httpResponse.body();
         WxAccessTokenDto wxAccessTokenDto = JSONUtil.toBean(access_token, WxAccessTokenDto.class);
         String accessToken = wxAccessTokenDto.getAccess_token();
-
+        System.out.println(">>>>>>>>>>>"+ accessToken);
         // 获得jsapiTicket
         String getJsapiTicketUrl = String.format(jsapiTicketUrl, accessToken);
         HttpResponse ticketResponse = RequestUtils.getWithNoHeader(getJsapiTicketUrl);
         String ticketJsonResponse = ticketResponse.body();
         WxTicketDto wxTicketDto = JSONUtil.toBean(ticketJsonResponse, WxTicketDto.class);
         String ticket = wxTicketDto.getTicket();
-
+        System.out.println(">>>>>>>>>>>"+ ticket);
         return ResultUtils.success(ticket);
     }
 

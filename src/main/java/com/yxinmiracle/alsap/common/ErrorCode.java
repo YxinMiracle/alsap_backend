@@ -17,7 +17,9 @@ public enum ErrorCode {
     DB_DATA_ERROR(40500, "数据库出现数据异常"),
     SYSTEM_ERROR(50000, "系统内部异常"),
     OPERATION_ERROR(50001, "操作失败"),
-    EMPTY_DATA(50002, "数据为空");
+    EMPTY_DATA(50002, "数据为空"),
+    HEIGHT_PRESSURE(50003, "系统压力过大"),
+    USER_HEIGHT_PRESSURE(50004, "用户访问压力过大");
 
     /**
      * 状态码
