@@ -9,20 +9,21 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yxinmiracle.alsap.annotation.IpFlowLimit;
 import com.yxinmiracle.alsap.common.ErrorCode;
 import com.yxinmiracle.alsap.common.ResultUtils;
-import com.yxinmiracle.alsap.model.entity.Cti;
-import com.yxinmiracle.alsap.model.entity.Item;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Aspect
 @Component
@@ -53,7 +54,7 @@ public class IpFlowLimitAspect {
     }
 
 
-    @Around("@annotation(ipFlowLimit)") 
+    @Around("@annotation(ipFlowLimit)")
     public Object handleIpFlowLimit(ProceedingJoinPoint joinPoint, IpFlowLimit ipFlowLimit) throws Exception {
         String resourceName = ipFlowLimit.resourceName();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -69,17 +70,16 @@ public class IpFlowLimitAspect {
         Entry entry = null;
         try {
             entry = SphU.entry(resourceName, EntryType.IN, 1, remoteAddr);
-            // 获取方法的参数
             Object[] args = joinPoint.getArgs();
             return joinPoint.proceed(args);
-        } catch (Throwable ex){
+        } catch (Throwable ex) {
             // 自定义业务异常
-            if (!BlockException.isBlockException(ex)){
+            if (!BlockException.isBlockException(ex)) {
                 Tracer.trace(ex);
                 return ResultUtils.error(ErrorCode.SYSTEM_ERROR, "系统错误");
             }
             if (ex instanceof DegradeException) {
-                return  ResultUtils.success(null);
+                return ResultUtils.success(null);
             }
             // 限流操作
             return ResultUtils.error(ErrorCode.USER_HEIGHT_PRESSURE, "用户频繁访问，您已被暂时封禁");
